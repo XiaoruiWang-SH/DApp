@@ -1,6 +1,15 @@
 # DAPP
 
-## APP主题：
+
+## APP主题：拍卖系统
+
+## 项目结构
+**contracts**: smart contract 代码
+**frontend**：前端代码
+**scripts**: 智能合约部署脚本
+**hardhat.config.js**: framework for compiling, testing and deploying on a local
+**package.json**: 包管理/项目配置文件
+**其他**: 编译/运行产物
 
 ## 开发进度：
 
