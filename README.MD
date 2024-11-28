@@ -1,22 +1,57 @@
 # DAPP
 
 
-## APP主题：拍卖系统
+## APP theme：Auction System
+1. User Registration and Identity
+2. Auction Creation
+    Include details like:
+    * Item description.
+    * Starting price.
+    * Auction duration (start and end times).
+    * Reserve price (optional minimum acceptable price).
+3. Bidding  
+    * Place Bid:
+        * Allow users to submit bids higher than the current bid.
+    * Track Highest Bid:
+        * Ensure the highest bid is updated in real time.
+    * Refund Outbid Users:
+        * Automatically return funds (or placeholders) to bidders who were outbid.
+    * Bid History (Optional):
+        * Display a list of all bids for transparency.
+4. Auction Lifecycle Management
+    * Start Auction:
+        * Activate an auction at the specified start time.
+    * End Auction:
+        * Automatically or manually close the auction when the duration ends.
+        * Determine the winner (highest bidder).
+        * Handle unsold items if no bids meet the reserve price.
+5. Payments and Funds Management
+    * ~~Escrow System:~~
+        * ~~Lock the highest bid funds during the auction.~~
+        * ~~Hold funds until the auction is successfully completed.~~
+    * Transfer Funds:
+        * Release funds to the seller after the auction ends.
+    * Refund Mechanism:
+        * Refund all other bidders except the highest one.
+    * Fees (Optional):
+        * Deduct platform or transaction fees if applicable.
 
-## 项目结构
-**contracts**: smart contract 代码
+## Prototype 
+![prototype](DApp.png)
+## project structure
+**contracts**: smart contract code
 
-**frontend**：前端代码
+**frontend**：frontend code
 
-**scripts**: 智能合约部署脚本
+**scripts**: smart contract code deploying scripts
 
 **hardhat.config.js**: framework for compiling, testing and deploying on a local
 
-**package.json**: 包管理/项目配置文件
+**package.json**: package management / project config
 
-**其他**: 编译/运行产物
+**others**: compiling / running artifacts
 
-## 开发进度：
+## Develop progress：
 
 ## 开发规则：
 1. 代码不要直接合并到main分支，应该合并到dev
