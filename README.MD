@@ -33,8 +33,8 @@
         * Release funds to the seller after the auction ends.
     * Refund Mechanism:
         * Refund all other bidders except the highest one.
-    * Fees (Optional):
-        * Deduct platform or transaction fees if applicable.
+    * ~~Fees (Optional)~~:
+        * ~~Deduct platform or transaction fees if applicable~~.
 
 ## Prototype 
 ![prototype](DApp.png)
