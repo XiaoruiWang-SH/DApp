@@ -38,10 +38,27 @@
 
 ## Prototype 
 ![prototype](DApp.png)
-## project structure
+
+## Development technologies
+**Smart contract**: 
+* development language: Solidity
+* test/depoly tool: hardhat
+* depoly environment: local network
+* interact tool: MetaMask
+
+**Off-Chain code**:
+* frontend code: React
+* backend code: Node.js
+* database: MySQL
+* Connect to blockchain via web3.js, ethers.js, or similar tools.
+* wallet interaction (e.g., MetaMask, WalletConnect).
+
+## Project structure
 **contracts**: smart contract code
 
 **frontend**：frontend code
+
+**backend**: backend code
 
 **scripts**: smart contract code deploying scripts
 
@@ -51,9 +68,14 @@
 
 **others**: compiling / running artifacts
 
-## Develop progress：
+## Tasks assignment:
+**Smart contract**: Haoyu Yang, Tianyi Zhou, Xu Zhang
 
-## 开发规则：
+**Off-Chain code**: Xiaorui Wang, Han Qin, Zitian Wang
+
+## Development progress：
+
+## Development rules：
 1. 代码不要直接合并到main分支，应该合并到dev
 2. 可以从dev分支拉个自己的分支
 3. 先pull,本地解决完冲突，自己验证通过，再push到远程
