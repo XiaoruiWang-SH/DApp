@@ -1,0 +1,17 @@
+{
+  "files": {
+    "main.css": "/static/css/main.34b78ba2.css",
+    "main.js": "/static/js/main.b1d97e01.js",
+    "static/media/art.jpg": "/static/media/art.75513b767f525f4fc211.jpg",
+    "static/media/motorbike.jpg": "/static/media/motorbike.a0c04f177c4dd94737a4.jpg",
+    "static/media/watch.jpg": "/static/media/watch.bf35e1124c82841afe0d.jpg",
+    "static/media/jewellery.jpg": "/static/media/jewellery.d44e7b126654dbd60c92.jpg",
+    "index.html": "/index.html",
+    "main.34b78ba2.css.map": "/static/css/main.34b78ba2.css.map",
+    "main.b1d97e01.js.map": "/static/js/main.b1d97e01.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.34b78ba2.css",
+    "static/js/main.b1d97e01.js"
+  ]
+}

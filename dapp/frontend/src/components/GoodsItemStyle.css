@@ -1,6 +1,6 @@
 /* General Card Styles */
 .card {
-    width: 300px;
+    width: 240px;
     background-color: white;
     border: 1px solid #ddd;
     border-radius: 10px;
@@ -28,14 +28,24 @@
   }
   
   .card-title {
-    font-size: 1.5rem;
-    color: #333;
-    margin: 0 0 10px;
+    font-size: 0.8rem;
+    color: black;
+    margin: 0;
+  }  
+  .card-bid {
+    display: flex;
+    justify-content: space-between;
   }
   
-  .card-description {
-    font-size: 1rem;
+  .left-text {
     color: #666;
-    margin: 0;
+    font-size: small;
+    text-align: left;
+  }
+  
+  .right-text {
+    color: #666;
+    font-size: small;
+    text-align: right;
   }
   
