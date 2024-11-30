@@ -1,0 +1,10 @@
+/* General Reset */
+
+  .card-container {
+    display: flex;
+    gap: 20px;
+    padding: 20px;
+    justify-content: left;
+    flex-wrap: wrap;
+  }
+  
