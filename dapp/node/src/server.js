@@ -14,6 +14,45 @@ const PORT = 3030;
 
 app.use(cors());
 
+const mysql = require("mysql2");
+
+// Create a connection
+const db = mysql.createConnection({
+  host: "localhost",    // MySQL server hostname
+  user: "root",         // MySQL username
+  password: "", // MySQL password
+  database: "testdb",   // MySQL database name
+});
+
+// Connect to the database
+db.connect((err) => {
+    if (err) {
+      console.error("Error connecting to MySQL:", err);
+      return;
+    }
+    console.log("Connected to MySQL database.");
+  });
+
+  // SQL query to create the table
+  const createTableQuery = `
+    CREATE TABLE IF NOT EXISTS users (
+      id INT AUTO_INCREMENT PRIMARY KEY,
+      name VARCHAR(100) NOT NULL,
+      email VARCHAR(100) NOT NULL,
+      age INT NOT NULL
+    );
+  `;
+  
+  // Example query
+  db.query(createTableQuery, (err, results) => {
+    if (err) {
+      console.error("Error fetching data:", err);
+      return;
+    }
+    console.log("Table created successfully.");
+    console.log("Users:", results);
+  });
+
 // Serve uploaded images statically
 app.use("/uploads", express.static(path.join(path.dirname(__dirname), "uploads")));
 
@@ -43,9 +82,6 @@ app.post("/uploads", upload.single("image"), (req, res) => {
   const fileUrl = `/uploads/${req.file.filename}`;
   res.send({ message: "Image uploaded successfully", filePath: req.file.path, fileUrl: fileUrl });
 });
-
-
-
 
 
 // Define routes
