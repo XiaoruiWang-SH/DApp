@@ -10,12 +10,45 @@ body, html {
   }
   
   /* Header */
-  header {
-    background-color: #4CAF50;
-    color: white;
-    padding: 10px;
-    text-align: center;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+  .header {
+    width: 100%;
+    height: 100px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #f0f0f0;
+    color: black;
+    padding: 10px 50px;
+
+    /* box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); */
+  }
+
+  .header-left {
+    display: flex;
+    align-items: center;
+  }
+
+  .header-homeicon {
+    display: flex;
+    width: 30px;
+    height: 30px;
+  }
+  .header-title {
+    display: flex;
+    font-size: 30px;
+    padding: 0 30px;
+  }
+
+  .header-right {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+  }
+  .header-right-item {
+    display: flex;
+
+    padding: 0 10px;
   }
   
   /* Sidebar */
@@ -58,11 +91,11 @@ body, html {
   
   /* Footer */
   footer {
-    background-color: #4CAF50;
-    color: white;
+    background-color: f0f0f0;
+    color: black;
     padding: 10px;
     text-align: center;
-    box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.2);
+    /* box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.2); */
     flex-shrink: 0;
   }
   
@@ -79,3 +112,44 @@ body, html {
     height: auto;
     overflow-y: auto;
   }
+
+  /* Basic Button Styles */
+.button {
+    /* display: inline-block; */
+    width: auto;
+    font-size: 12px; /* Font size */
+    text-align: center; /* Center the text */
+    border-radius: 5px; /* Rounded corners */
+    cursor: pointer; /* Pointer cursor on hover */
+    color: black;
+    background-color: transparent;
+    border: 0.5px solid black; 
+    padding: 5px 10px;
+    margin: 0 10px;
+  }
+  
+  /* Hover Effect */
+  .button:hover {
+    transform: scale(1.05); /* Slightly enlarge */
+  }
+  
+  /* Focus Effect */
+  .button:focus {
+    outline-offset: 2px; /* Space between outline and button */
+  }
+  
+  /* Disabled Button */
+  .button:disabled {
+    background-color: #cccccc; /* Light gray background */
+    cursor: not-allowed; /* Not-allowed cursor */
+    color: #666666; /* Gray text */
+  }
+
+  .header-usericon {
+    display: flex;
+    width: 30px;
+    height: 30px;
+    padding: 0 10px;
+  }
+
+  

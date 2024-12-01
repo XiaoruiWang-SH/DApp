@@ -1,14 +1,78 @@
 import React from 'react';
 import { Outlet, Link } from 'react-router-dom';
 import './LayoutStyle.css';
+import home_icon from '../res/home_icon.png';
+import user_icon from '../res/user_icon.png';
+import { useNavigate } from "react-router-dom";
+import { useState } from 'react';
 
 
 const Layout = () => {
+    const navigate = useNavigate();
+    const [login, setLogin] = useState(false);
+
+    const homeIconClick = () => {
+        navigate("/");
+    };
+
+    const loginClick = () => {
+        setLogin(true);
+    };
+    const logoutClick = () => {
+        setLogin(false);
+    };
+
+    const onProcessClick = () => {
+        navigate("/onprocess");
+    };
+
+    const publishClick = () => {
+        navigate("/publish");
+    };
+
+    const HeaderLogin = () => {
+        return (
+            <div>
+                {login ?  (
+                    // <button className='button' onClick={logoutClick}> 
+                    // Logout
+                    // </button>
+                    <div className='header-usericon '>
+                        <img src={user_icon} alt="Icon" />
+                    </div>
+                    ) : (
+                        <button className='button' onClick={loginClick}>
+                        Login
+                        </button>
+                        )}
+            </div>
+        );
+    };
+
     const Header = () => {
         return (
-          <header >
-            <h1>{"Auction System"}</h1>
-          </header>
+          <div className='header'>
+            <div className='header-left'  onClick={homeIconClick}>
+                <div className='header-homeicon'>
+                    <img src={home_icon} alt="Icon" />
+                </div>
+                <div className='header-title'>
+                    <text>{"D-Auction System"}</text>
+                </div>
+                
+            </div>
+            <div className='header-right'>
+                <button className='button' hidden={!login} onClick={publishClick}>
+                    Publish
+                </button>
+
+                <button className='button' hidden={!login} onClick={onProcessClick}>
+                    onProcess
+                </button>
+                
+                <HeaderLogin />
+            </div>
+          </div>
         );
       };  
       
@@ -46,7 +110,7 @@ const Layout = () => {
     const Footer = () => {
         return (
           <footer >
-            <p>© 2024 My Website</p>
+            <p>© 2024 D-Auction System</p>
           </footer>
         );
       };
