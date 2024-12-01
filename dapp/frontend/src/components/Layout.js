@@ -64,30 +64,50 @@ const Layout = () => {
         console.log("closeMenu");
     };
 
+    const myfavouriteClick = () => {
+        navigate("/myFavorites");
+        closeMenu();
+        console.log("myfavouriteClick");
+    };
+    const buyClick = () => {
+        navigate("/myBought");
+        closeMenu();
+        console.log("buyClick");
+    };
+    const soldClick = () => {
+        navigate("/mySold");
+        closeMenu();
+        console.log("soldClick");
+    };
+    const balanceClick = () => {
+        closeMenu();
+        console.log("balanceClick");
+    };
+
     const Popup = () => {
         return (
             <div className='user-menu-container' ref={menuRef}>
             <div className='popup-menu' >
                 <ul>
-                    <li onClick={closeMenu}>
+                    <li onClick={myfavouriteClick}>
                         <div className='popup-menu-item'>
                             <img src={favourite_icon} alt="Icon"/>
                             <text>{"My Favorites"}</text>
                         </div>
                     </li>
-                    <li onClick={closeMenu}>
+                    <li onClick={buyClick}>
                         <div className='popup-menu-item'>
                             <img src={buy_icon} alt="Icon"/>
                             <text>{"Buy"}</text>
                         </div>
                     </li>
-                    <li onClick={closeMenu}>
+                    <li onClick={soldClick}>
                         <div className='popup-menu-item'>
                             <img src={sold_icon} alt="Icon"/>
                             <text>{"Sold"}</text>
                         </div>
                     </li>
-                    <li onClick={closeMenu}>
+                    <li onClick={balanceClick}>
                         <div  className='popup-menu-item'>
                             <img src={balance_icon} alt="Icon"/>
                             <text>{"My Balance"}</text>

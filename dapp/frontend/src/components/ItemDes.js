@@ -53,7 +53,7 @@ export default function ItemDes() {
     const bidNormal = () => {
         return (
             <div className="bid-container">
-                <button className="button" onClick={bidItemClick}>
+                <button className="item-button" onClick={bidItemClick}>
                     Bid
                 </button>
             </div>
@@ -75,7 +75,7 @@ export default function ItemDes() {
                         
                     />
                 </div>
-                <button className="button" onClick={handleConfirm}>
+                <button className="item-button" onClick={handleConfirm}>
                     Confirm
                 </button>
             </div>

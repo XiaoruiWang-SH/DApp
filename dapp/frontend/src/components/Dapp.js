@@ -5,6 +5,9 @@ import ItemDes from './ItemDes';
 import Layout from './Layout';
 import PublishPage from './PublishPage.js';
 import Onprocess from './Onprocess.js';
+import MyFavorites from './MyFavorites.js';
+import MyBought from './MyBought.js';
+import MySold from './MySold.js';
 
 
 
@@ -17,6 +20,9 @@ export default function Dapp() {
                 <Route path="itemDes" element={<ItemDes />} />
                 <Route path="publish" element={<PublishPage />} />
                 <Route path="onprocess" element={<Onprocess />} />
+                <Route path="myFavorites" element={<MyFavorites />} />
+                <Route path="myBought" element={<MyBought />} />
+                <Route path="mySold" element={<MySold />} />
             </Route>
           </Routes>
         </Router>
