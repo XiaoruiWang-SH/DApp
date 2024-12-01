@@ -51,7 +51,8 @@ const Layout = () => {
     };
 
     const publishClick = () => {
-        navigate("/publish");
+        // navigate("/publish");
+        navigate("/publishfake");
     };
 
     const userIconClick = () => {

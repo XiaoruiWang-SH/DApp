@@ -8,6 +8,7 @@ import Onprocess from './Onprocess.js';
 import MyFavorites from './MyFavorites.js';
 import MyBought from './MyBought.js';
 import MySold from './MySold.js';
+import PublishPageFake from './PublishPageFake.js';
 
 
 
@@ -23,6 +24,7 @@ export default function Dapp() {
                 <Route path="myFavorites" element={<MyFavorites />} />
                 <Route path="myBought" element={<MyBought />} />
                 <Route path="mySold" element={<MySold />} />
+                <Route path="publishfake" element={<PublishPageFake />} />
             </Route>
           </Routes>
         </Router>
