@@ -1,14 +1,21 @@
 const express = require("express");
-const app = express();
 const cors = require("cors");
 const multer = require("multer");
 const path = require("path");
 
+const app = express();
+
+app.use(express.static(path.join(__dirname, "public")));
 
 const goodsItems = require("./homepage.json");
 const itemdesc = require("./itemdesc.json");
 
+const PORT = 3030;
+
 app.use(cors());
+
+// Serve uploaded images statically
+app.use("/uploads", express.static(path.join(path.dirname(__dirname), "uploads")));
 
 // Set up multer for file uploads
 const storage = multer.diskStorage({
@@ -29,15 +36,15 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 // Endpoint to handle image uploads
-app.post("/upload", upload.single("image"), (req, res) => {
+app.post("/uploads", upload.single("image"), (req, res) => {
   if (!req.file) {
     return res.status(400).send("No file uploaded.");
   }
-  res.send({ message: "Image uploaded successfully", filePath: req.file.path });
+  const fileUrl = `/uploads/${req.file.filename}`;
+  res.send({ message: "Image uploaded successfully", filePath: req.file.path, fileUrl: fileUrl });
 });
 
-// Serve uploaded images statically
-app.use("/uploads", express.static("uploads"));
+
 
 
 
@@ -68,7 +75,7 @@ app.use((req, res) => {
 });
 
 // Start the server
-const PORT = 3030;
+
 app.listen(PORT, () => {
   console.log(`Server is running on http://localhost:${PORT}`);
 });

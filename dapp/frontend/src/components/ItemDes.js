@@ -115,11 +115,12 @@ export default function ItemDes() {
             </>
           );
       };
+      console.log("item.image: " + item.image);
 
   return (
     <div className="page-container">
         <div className="goodsImg">
-            <img src={item.img} alt={"title"}/>
+            <img src={item.image} alt={"title"} crossOrigin="anonymous"/>
         </div>
         <div className="activityArea">
             <div className="goodsInfo">

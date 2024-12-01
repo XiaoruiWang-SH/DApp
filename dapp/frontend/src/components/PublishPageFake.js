@@ -21,7 +21,7 @@ export default function PublishPageFake() {
     formData.append("image", img);
 
     try {
-    const response = await axios.post("/upload", formData, {
+    const response = await axios.post("/uploads", formData, {
         headers: {
         "Content-Type": "multipart/form-data",
         },
