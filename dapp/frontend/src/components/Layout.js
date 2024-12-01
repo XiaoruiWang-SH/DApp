@@ -114,7 +114,7 @@ const Layout = () => {
                         </div>
                     </li>
                 </ul>
-                <hr/>
+                <hr className='hr'/>
                 <ul>
                     <li onClick={closeMenu}>
                         <div className='popup-menu-item' onClick={logoutClick}>

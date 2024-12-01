@@ -216,7 +216,7 @@ body, html {
     font-size: 12px;
   }
 
-  hr {
+  .hr {
     margin: 0; /* Remove margin */
     padding: 0; /* Remove padding */
     border: none; /* Optional: Remove default border if needed */
