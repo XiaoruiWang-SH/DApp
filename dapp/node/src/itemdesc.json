@@ -1,0 +1,16 @@
+{
+    "id": 12,
+    "title": "hahah Lights",
+    "image": null,
+    "description": "Experience the vibrant city nightlife.",
+    "startBid": 100,
+    "highestBid": 200,
+    "totalBids": 10,
+    "endTime": "2024-01-01 12:00:00",
+    "bidHistory": [
+        { "date": "2024-11-30 14:35", "price": "CHF 9600" },
+        { "date": "2024-11-30 14:20", "price": "CHF 9400" },
+        { "date": "2024-11-30 14:05", "price": "CHF 9300" },
+        { "date": "2024-11-30 13:50", "price": "CHF 9200" }
+    ]
+}

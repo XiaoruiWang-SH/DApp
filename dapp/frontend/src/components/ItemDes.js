@@ -3,6 +3,7 @@ import watch from '../res/watch.jpg';
 import './ItemDesStyle.css';
 import { useState } from 'react';
 import { useLocation } from "react-router-dom";
+import axios from 'axios';
 
 export default function ItemDes() {
     const location = useLocation();
@@ -31,23 +32,24 @@ export default function ItemDes() {
     useEffect(() => {
         console.log(" Requerst data for itemID: " + id);
 
-        const item = {
-            id: 12,
-            title: "hahah Lights",
-            image: watch,
-            description: "Experience the vibrant city nightlife.",
-            startBid: 100,
-            highestBid: 200,
-            totalBids: 10,
-            endTime: "2024-01-01 12:00:00",
-            bidHistory: [
-                { date: "2024-11-30 14:35", price: "CHF 9600" },
-                { date: "2024-11-30 14:20", price: "CHF 9400" },
-                { date: "2024-11-30 14:05", price: "CHF 9300" },
-                { date: "2024-11-30 13:50", price: "CHF 9200" }
-              ]
-        };
-        setItem(item);
+        axios.get('/item', {
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        }).then((response) => {
+                console.log(response.data);
+                setItem(response.data);
+            })
+            .catch((error) => {
+                if (error.response) {
+                    console.log("Headers:", error.config.headers);
+                    console.log("Error Response Data:", error.response.data);
+                  } else {
+                    console.log("Error:", error.message);
+                  }
+            });
+
+        
     }, [setItem]);
 
     const bidNormal = () => {
@@ -117,7 +119,7 @@ export default function ItemDes() {
   return (
     <div className="page-container">
         <div className="goodsImg">
-            <img src={watch} alt={"title"}/>
+            <img src={item.img} alt={"title"}/>
         </div>
         <div className="activityArea">
             <div className="goodsInfo">
