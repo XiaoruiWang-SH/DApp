@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import "./PublishPageFakeStyle.css";
+import axios from 'axios';
 
 export default function PublishPageFake() {
  
@@ -8,8 +9,30 @@ export default function PublishPageFake() {
   const [description, setDescription] = useState("");
   const [startingBid, setStartingBid] = useState(0);
   const [startingTime, setStartingTime] = useState("");
+  const [message, setMessage] = useState("");
 
-  const handleImageUpload = (event) => {
+  const handleImageUpload = async (event) => {
+    console.log("Files:", event.target.files);
+    const img = event.target.files[0];
+    if (!img) {
+        return;
+    }
+    const formData = new FormData();
+    formData.append("image", img);
+
+    try {
+    const response = await axios.post("/upload", formData, {
+        headers: {
+        "Content-Type": "multipart/form-data",
+        },
+    });
+    console.log("Image uploaded:", response.data);
+    setMessage(response.data.message || "Image uploaded successfully!");
+    } catch (error) {
+    console.error("Error uploading image:", error);
+    setMessage("Failed to upload the image. Please try again.");
+    }
+    
     const files = Array.from(event.target.files);
     setPictures((prev) => [...prev, ...files]);
   };

@@ -1,12 +1,45 @@
 const express = require("express");
 const app = express();
 const cors = require("cors");
+const multer = require("multer");
+const path = require("path");
 
 
 const goodsItems = require("./homepage.json");
 const itemdesc = require("./itemdesc.json");
 
 app.use(cors());
+
+// Set up multer for file uploads
+const storage = multer.diskStorage({
+    destination: (req, file, cb) => {
+        const uploadPath = path.join(path.dirname(__dirname), "uploads");
+        console.log("Upload Path: " + uploadPath);
+      cb(null, uploadPath); // Directory where files will be saved
+    },
+    filename: (req, file, cb) => {
+      cb(null, Date.now() + path.extname(file.originalname)); // Unique file name
+    },
+  });
+  
+const upload = multer({ storage });
+
+
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
+// Endpoint to handle image uploads
+app.post("/upload", upload.single("image"), (req, res) => {
+  if (!req.file) {
+    return res.status(400).send("No file uploaded.");
+  }
+  res.send({ message: "Image uploaded successfully", filePath: req.file.path });
+});
+
+// Serve uploaded images statically
+app.use("/uploads", express.static("uploads"));
+
+
 
 // Define routes
 app.get("/api", (req, res) => {

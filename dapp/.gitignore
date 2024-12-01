@@ -6,6 +6,7 @@
 /frontend/build
 /node/build 
 /node/node_modules
+/node/uploads
 /artifacts
 /cache
 /.pnp
