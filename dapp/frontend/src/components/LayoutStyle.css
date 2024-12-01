@@ -90,10 +90,10 @@ body, html {
   }
   
   /* Footer */
-  footer {
-    background-color: f0f0f0;
+  .footer {
+    background-color: #f0f0f0;
     color: black;
-    padding: 10px;
+    padding: 20px 10px;
     text-align: center;
     /* box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.2); */
     flex-shrink: 0;

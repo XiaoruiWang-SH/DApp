@@ -203,9 +203,9 @@ const Layout = () => {
       
     const Footer = () => {
         return (
-          <footer >
+          <div className='footer' >
             <p>© 2024 D-Auction System</p>
-          </footer>
+          </div>
         );
       };
 
