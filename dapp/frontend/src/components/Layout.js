@@ -4,12 +4,30 @@ import './LayoutStyle.css';
 import home_icon from '../res/home_icon.png';
 import user_icon from '../res/user_icon.png';
 import { useNavigate } from "react-router-dom";
-import { useState } from 'react';
+import { useState, useRef, useEffect } from 'react';
 
 
 const Layout = () => {
     const navigate = useNavigate();
     const [login, setLogin] = useState(false);
+    const [isMenuOpen, setIsMenuOpen] = useState(false);
+    const menuRef = useRef(null); // Reference to the menu container
+
+    useEffect(() => {
+        const handleClickOutside = (event) => {
+          // Check if the clicked element is outside the menu
+          if (menuRef.current && !menuRef.current.contains(event.target)) {
+            closeMenu();
+          }
+        };
+        // Attach event listener
+        document.addEventListener("mousedown", handleClickOutside);
+
+        // Cleanup the listener on component unmount
+        return () => {
+            document.removeEventListener("mousedown", handleClickOutside);
+        };
+    }, []);
 
     const homeIconClick = () => {
         navigate("/");
@@ -30,6 +48,30 @@ const Layout = () => {
         navigate("/publish");
     };
 
+    const userIconClick = () => {
+        console.log("UserIconClick");
+        setIsMenuOpen(true);
+    };
+
+    const closeMenu = () => {
+        setIsMenuOpen(false);
+        console.log("closeMenu");
+    };
+
+    const Popup = () => {
+        return (
+            <div className='user-menu-container' ref={menuRef}>
+            <div className='popup-menu' >
+                <ul>
+                    <li onClick={closeMenu}>Profile</li>
+                    <li onClick={closeMenu}>Settings</li>
+                    <li onClick={closeMenu}>Logout</li>
+                </ul>
+            </div>
+            </div>
+        );
+    };
+
     const HeaderLogin = () => {
         return (
             <div>
@@ -37,23 +79,25 @@ const Layout = () => {
                     // <button className='button' onClick={logoutClick}> 
                     // Logout
                     // </button>
-                    <div className='header-usericon '>
-                        <img src={user_icon} alt="Icon" />
+                    <div className='header-usericon'>
+                        <img src={user_icon} alt="Icon"  onClick={userIconClick}/>
+                    {isMenuOpen && (<Popup />)}
                     </div>
                     ) : (
                         <button className='button' onClick={loginClick}>
-                        Login
+                            Login
                         </button>
                         )}
             </div>
         );
     };
 
+
     const Header = () => {
         return (
           <div className='header'>
             <div className='header-left'  onClick={homeIconClick}>
-                <div className='header-homeicon'>
+                <div className='header-homeicon' >
                     <img src={home_icon} alt="Icon" />
                 </div>
                 <div className='header-title'>
@@ -86,13 +130,6 @@ const Layout = () => {
 
       const NavList = () => {
         return (
-        //     <div>
-        //     <text>层层递进页面</text>
-        //     {step === 1 && (
-        //       <text> / 这是第一步的内容</text>
-        //     )}
-        //   </div>
-
         <header>
             <h1>My Website</h1>
             <nav>
