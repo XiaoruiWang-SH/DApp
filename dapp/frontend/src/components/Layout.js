@@ -3,6 +3,12 @@ import { Outlet, Link } from 'react-router-dom';
 import './LayoutStyle.css';
 import home_icon from '../res/home_icon.png';
 import user_icon from '../res/user_icon.png';
+import favourite_icon from '../res/favourite_icon.png';
+import sold_icon from '../res/sold_icon.png';
+import balance_icon from '../res/balance_icon.png';
+import buy_icon from '../res/buy_icon.png';
+import logout_icon from '../res/logout_icon.png';
+
 import { useNavigate } from "react-router-dom";
 import { useState, useRef, useEffect } from 'react';
 
@@ -63,10 +69,41 @@ const Layout = () => {
             <div className='user-menu-container' ref={menuRef}>
             <div className='popup-menu' >
                 <ul>
-                    <li onClick={closeMenu}>Profile</li>
-                    <li onClick={closeMenu}>Settings</li>
-                    <li onClick={closeMenu}>Logout</li>
+                    <li onClick={closeMenu}>
+                        <div className='popup-menu-item'>
+                            <img src={favourite_icon} alt="Icon"/>
+                            <text>{"My Favorites"}</text>
+                        </div>
+                    </li>
+                    <li onClick={closeMenu}>
+                        <div className='popup-menu-item'>
+                            <img src={buy_icon} alt="Icon"/>
+                            <text>{"Buy"}</text>
+                        </div>
+                    </li>
+                    <li onClick={closeMenu}>
+                        <div className='popup-menu-item'>
+                            <img src={sold_icon} alt="Icon"/>
+                            <text>{"Sold"}</text>
+                        </div>
+                    </li>
+                    <li onClick={closeMenu}>
+                        <div  className='popup-menu-item'>
+                            <img src={balance_icon} alt="Icon"/>
+                            <text>{"My Balance"}</text>
+                        </div>
+                    </li>
                 </ul>
+                <hr/>
+                <ul>
+                    <li onClick={closeMenu}>
+                        <div className='popup-menu-item' onClick={logoutClick}>
+                            <img src={logout_icon} alt="Icon"/>
+                            <text>{"Logout"}</text>
+                        </div>
+                    </li>
+                </ul>
+
             </div>
             </div>
         );
