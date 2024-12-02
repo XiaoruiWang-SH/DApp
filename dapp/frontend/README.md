@@ -1,3 +1,21 @@
+# Environment Preparation
+### Node.js
+### Mysql
+
+# Start Project Steps
+### Start Mysql
+1. run `brew services start mysql`
+2. create a database: run `mysql -u rootl` , then run `CREATE DATABASE auctiondb;`, then you can check if the database is created successful by run `SHOW DATABASES;`. You will see:
+![doc_database](doc_database.png)
+
+3. cd "node/src", then run `node server.js`, then the node server is running on localhost:3030
+4. cd "frontend", then run `npm start`, then the webpage is started.
+
+
+
+================================================
+
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
