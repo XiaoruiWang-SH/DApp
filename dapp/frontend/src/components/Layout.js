@@ -51,7 +51,8 @@ const Layout = () => {
     };
 
     const publishClick = () => {
-        navigate("/publish");
+        // navigate("/publish");
+        navigate("/publishfake");
     };
 
     const userIconClick = () => {
@@ -114,7 +115,7 @@ const Layout = () => {
                         </div>
                     </li>
                 </ul>
-                <hr/>
+                <hr className='hr'/>
                 <ul>
                     <li onClick={closeMenu}>
                         <div className='popup-menu-item' onClick={logoutClick}>
@@ -203,9 +204,9 @@ const Layout = () => {
       
     const Footer = () => {
         return (
-          <footer >
+          <div className='footer' >
             <p>© 2024 D-Auction System</p>
-          </footer>
+          </div>
         );
       };
 
