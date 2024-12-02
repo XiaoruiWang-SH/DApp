@@ -2,10 +2,6 @@ import React from "react";
 import "./HomepageStyle.css";
 import GoodsItem from './GoodsItem';
 import { useState, useEffect } from 'react';
-import art from '../res/art.jpg';
-import jewellery from '../res/jewellery.jpg';
-import motorbike from '../res/motorbike.jpg';
-import watch from '../res/watch.jpg';
 import { useNavigate } from "react-router-dom";
 import axios from 'axios';
 
@@ -53,12 +49,12 @@ export default function HomePage() {
                 goodsItems.map((goodsItem, index) => (
                     <GoodsItem
                         key={index}
-                        title={goodsItem.title}
-                        image={goodsItem.image}
-                        startBid={goodsItem.startBid}
-                        highestBid={goodsItem.highestBid}
-                        totalBids={goodsItem.totalBids}
-                        endTime={goodsItem.endTime}
+                        title={goodsItem.Title}
+                        image={goodsItem.Imgurl}
+                        startBid={goodsItem.StartBid}
+                        highestBid={goodsItem.CurrentHighest}
+                        totalBids={goodsItem.Total}
+                        endTime={goodsItem.EndTime}
                         onClick={() => handleItemClick(goodsItem)}
                     />
                 ))

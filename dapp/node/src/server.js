@@ -3,7 +3,7 @@ const cors = require("cors");
 const multer = require("multer");
 const path = require("path");
 
-const { getItems, addItem } = require("./db/queries");
+const { getItems, getItemById, addItem } = require("./db/queries");
 
 const app = express();
 
@@ -11,6 +11,7 @@ app.use(express.static(path.join(__dirname, "public")));
 
 const goodsItems = require("./homepage.json");
 const itemdesc = require("./itemdesc.json");
+const { get } = require("http");
 
 
 const PORT = 3030;
@@ -56,30 +57,30 @@ app.use(express.urlencoded({ extended: true }));
 const currentDate = new Date();
 const formattedDate = currentDate.toISOString().slice(0, 19).replace("T", " ");
 
-(async () => {
-    try {
-      // Add an item
-      const newItemId = await addItem(
-        "Vintage Lamp",
-        "A beautiful vintage lamp from the 1950s.",
-        50,
-        10,
-        currentDate,
-        currentDate,
-        1,
-        "JohnDoe",
-        "JaneDoe",
-        5
-      );
-      console.log("New Item ID:", newItemId);
+// (async () => {
+//     try {
+//       // Add an item
+//       const newItemId = await addItem(
+//         "Vintage Lamp",
+//         "A beautiful vintage lamp from the 1950s.",
+//         50,
+//         10,
+//         currentDate,
+//         currentDate,
+//         1,
+//         "JohnDoe",
+//         "JaneDoe",
+//         5
+//       );
+//       console.log("New Item ID:", newItemId);
   
-      // Fetch all items
-      const items = await getItems();
-      console.log("All Items:", items);
-    } catch (err) {
-      console.error("Error:", err);
-    }
-  })();
+//       // Fetch all items
+//       const items = await getItems();
+//       console.log("All Items:", items);
+//     } catch (err) {
+//       console.error("Error:", err);
+//     }
+//   })();
 
 // Endpoint to handle image uploads
 app.post("/uploads", upload.single("image"), (req, res) => {
@@ -99,26 +100,97 @@ app.get("/api", async (req, res) => {
     console.log("Headers:", req.headers); // Log the request headers
     console.log("Query Parameters:", req.query); 
 
-
-    const goodsItems =  await getItems();
-
+    let goodsItems = [];
+    try {
+        goodsItems =  await getItems();
+    } catch (error) {
+        console.error("Error:", error);
+    }
+    
     console.log("Goods Items:", goodsItems);
-
     res.json(goodsItems);
 });
 
-app.get("/item", (req, res) => {
-    res.json(itemdesc);
+app.get("/item", async (req, res) => {
+    console.log("Request Details:");
+    const { itemId } = req.query;
+    console.log("Request Details - itemid:" + itemId);
+    let auctionitem = {};
+    try {
+        auctionitem = await getItemById(itemId);
+    } catch (error) {
+        console.error("Error:", error);
+    }
+    console.log("Item Description:", auctionitem);
+    res.json(auctionitem);
 });
+
+// app.post("/publish", (req, res) => {
+//     console.log("publish, Request Details:");
+//     console.log("URL:", req.url); // Log the request URL
+//     console.log("Method:", req.method); // Log the request method (e.g., GET, POST)
+//     console.log("Headers:", req.headers); // Log the request headers
+//     console.log("Query Parameters:", req.query); 
+//     console.log("Request Body:", req.body); // Log the request body
+
+//     res.json({ message: "Item added successfully!" });
+// });
+
+
+// const formData = {
+//     title,
+//     pictureurl,
+//     description,
+//     startingBid,
+//     formattedDate,
+//   };
+app.post("/publish", async (req, res) => {
+    const { title, pictureurl, description, startingBid, formattedDate } = req.body;
+  
+    console.log("Received data:", { title, pictureurl, description, startingBid, formattedDate });
+
+    // const addItem = async (title, des, imgurl, startBid, currentHighest, total, startTime, endTime, status, publisher, owner, favorites)
+
+    try {
+        // Add an item
+        const newItemId = await addItem(
+            title,
+            description, 
+            pictureurl, 
+            startingBid,
+            0,
+            0,
+            formattedDate,
+            formattedDate,
+            0,
+          "",
+          "",
+          0
+        );
+        console.log("New Item ID:", newItemId);
+    
+        // Fetch all items
+        const items = await getItems();
+        console.log("All Items:", items);
+      } catch (err) {
+        console.error("Error:", err);
+      }
+  
+    // Respond to the client
+    res.json({
+      message: "Item created successfully",
+      data: { title, description },
+    });
+  });
 
 // 404 Error Handling
 app.use((req, res) => {
-    console.log("Request Details:");
-    console.log("URL:", req.url); // Log the request URL
-    console.log("Method:", req.method); // Log the request method (e.g., GET, POST)
-    console.log("Headers:", req.headers); // Log the request headers
-    console.log("Query Parameters:", req.query); 
-    console.log("404 Request for req:   " + req);``
+    // console.log("Request Details:");
+    // console.log("URL:", req.url); // Log the request URL
+    // console.log("Method:", req.method); // Log the request method (e.g., GET, POST)
+    // console.log("Headers:", req.headers); // Log the request headers
+    // console.log("Query Parameters:", req.query); 
+    // console.log("404 Request for req:   " + req);``
   res.status(404).send("404 Not Found");
 });
 

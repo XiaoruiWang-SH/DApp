@@ -12,12 +12,24 @@ const getItems = async () => {
   }
 };
 
+const getItemById = async (id) => {
+    try {
+      // Parameterized query to fetch the item by id
+      const [rows] = await pool.query("SELECT * FROM auctionItems WHERE id = ?", [id]);
+      return rows[0]; // Return the first matching row (or undefined if not found)
+    } catch (err) {
+      console.error("Error fetching item by id:", err);
+      throw err;
+    }
+  };
+  
+
 // Insert a new item
-const addItem = async (title, des, currentHighest, total, startTime, endTime, status, publisher, owner, favorites) => {
+const addItem = async (title, des, imgurl, startBid, currentHighest, total, startTime, endTime, status, publisher, owner, favorites) => {
   try {
     const [result] = await pool.query(
-      "INSERT INTO auctionItems (Title, Des, CurrentHighest, Total, StartTime, EndTime, Status, Publisher, Owner, Favorites) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
-      [title, des, currentHighest, total, startTime, endTime, status, publisher, owner, favorites]
+      "INSERT INTO auctionItems (Title, Des, Imgurl, StartBid, CurrentHighest, Total, StartTime, EndTime, Status, Publisher, Owner, Favorites) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+      [title, des, imgurl, startBid, currentHighest, total, startTime, endTime, status, publisher, owner, favorites]
     );
     return result.insertId;
   } catch (err) {
@@ -26,5 +38,5 @@ const addItem = async (title, des, currentHighest, total, startTime, endTime, st
   }
 };
 
-module.exports = { getItems, addItem };
+module.exports = { getItems, getItemById, addItem };
 

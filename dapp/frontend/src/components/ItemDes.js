@@ -1,5 +1,4 @@
 import React, { useEffect } from "react";
-import watch from '../res/watch.jpg';
 import './ItemDesStyle.css';
 import { useState } from 'react';
 import { useLocation } from "react-router-dom";
@@ -33,6 +32,9 @@ export default function ItemDes() {
         console.log(" Requerst data for itemID: " + id);
 
         axios.get('/item', {
+            params: {
+                itemId: id,  
+              },
             headers: {
                 'Content-Type': 'application/json',
             },
@@ -51,6 +53,13 @@ export default function ItemDes() {
 
         
     }, [setItem]);
+
+    const bidHistory = [
+        { "date": "2024-11-30 14:35", "price": "CHF 9600" },
+        { "date": "2024-11-30 14:20", "price": "CHF 9400" },
+        { "date": "2024-11-30 14:05", "price": "CHF 9300" },
+        { "date": "2024-11-30 13:50", "price": "CHF 9200" }
+    ];
 
     const bidNormal = () => {
         return (
@@ -120,13 +129,13 @@ export default function ItemDes() {
   return (
     <div className="page-container">
         <div className="goodsImg">
-            <img src={item.image} alt={"title"} crossOrigin="anonymous"/>
+            <img src={item.Imgurl} alt={"title"} crossOrigin="anonymous"/>
         </div>
         <div className="activityArea">
             <div className="goodsInfo">
                 {/* title & desc information */}
-                <h3>{item.title}</h3>
-                <p>{item.description}</p>
+                <h3>{item.Title}</h3>
+                <p>{item.Des}</p>
             </div>
             <hr/>
             <div className="auctionInfo">
@@ -134,28 +143,28 @@ export default function ItemDes() {
                 <div className="acutionItem">
                     {/* starting bid */}
                     <text>Starting Bid </text>
-                    <text>{item.startBid} </text>
+                    <text>{item.StartBid} </text>
                 </div>
                 <div className="acutionItem">
                     {/* current highest bid */}
                     <text>Current highest bid </text>
-                    <text>{item.highestBid} </text>
+                    <text>{item.CurrentHighest} </text>
                 </div>
                 <div  className="acutionItem">
                     {/* total bid */}
                     <text>Total Bid </text>
-                    <text>{item.totalBids} </text>
+                    <text>{item.Total} </text>
                 </div>
                 <div className="acutionItem">
                     {/* end time */}
                     <text>End Time </text>
-                    <text>{item.endTime} </text>
+                    <text>{item.EndTime} </text>
                 </div>
             </div>
             <hr/>
             <div className="bidArea">
                 {/* bid area */}
-                <BidHistory historyList={item.bidHistory} />
+                <BidHistory historyList={bidHistory} />
                 {bidclick ? bidClicked() : bidNormal()}
                 <div>
                     {/* history */}

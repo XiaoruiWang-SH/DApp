@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import "./PublishPageFakeStyle.css";
 import axios from 'axios';
+import { useNavigate } from "react-router-dom";
 
 export default function PublishPageFake() {
  
@@ -10,6 +11,9 @@ export default function PublishPageFake() {
   const [startingBid, setStartingBid] = useState(0);
   const [startingTime, setStartingTime] = useState("");
   const [message, setMessage] = useState("");
+  const [pictureurl, setPictureurl] = useState("");
+
+  const navigate = useNavigate();
 
   const handleImageUpload = async (event) => {
     console.log("Files:", event.target.files);
@@ -27,6 +31,10 @@ export default function PublishPageFake() {
         },
     });
     console.log("Image uploaded:", response.data);
+    const fileUrl = response.data.fileUrl;
+    if (fileUrl) {
+        setPictureurl(fileUrl);
+    }
     setMessage(response.data.message || "Image uploaded successfully!");
     } catch (error) {
     console.error("Error uploading image:", error);
@@ -37,16 +45,33 @@ export default function PublishPageFake() {
     setPictures((prev) => [...prev, ...files]);
   };
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
+    const currentDate = new Date();
+    const formattedDate = currentDate.toISOString().slice(0, 19).replace("T", " ");
+
     const formData = {
       title,
-      pictures,
+      pictureurl,
       description,
       startingBid,
-      startingTime,
+      formattedDate,
     };
     console.log("Form Submitted:", formData);
+    try {
+    const response = await axios.post("/publish", formData, {
+        headers: {
+            'Content-Type': 'application/json',
+        },
+    });
+    console.log("publish Response:", response.data);
+    } catch (error) {
+        console.error("Error handleSubmit:", error);
+    }
+    alert(`Publish Successful: ${title}`);
+    navigate("/");
+
+
   };
 
   return (
