@@ -3,6 +3,8 @@ const cors = require("cors");
 const multer = require("multer");
 const path = require("path");
 
+const { getItems, addItem } = require("./db/queries");
+
 const app = express();
 
 app.use(express.static(path.join(__dirname, "public")));
@@ -10,48 +12,10 @@ app.use(express.static(path.join(__dirname, "public")));
 const goodsItems = require("./homepage.json");
 const itemdesc = require("./itemdesc.json");
 
+
 const PORT = 3030;
 
 app.use(cors());
-
-const mysql = require("mysql2");
-
-// Create a connection
-const db = mysql.createConnection({
-  host: "localhost",    // MySQL server hostname
-  user: "root",         // MySQL username
-  password: "", // MySQL password
-  database: "testdb",   // MySQL database name
-});
-
-// Connect to the database
-db.connect((err) => {
-    if (err) {
-      console.error("Error connecting to MySQL:", err);
-      return;
-    }
-    console.log("Connected to MySQL database.");
-  });
-
-  // SQL query to create the table
-  const createTableQuery = `
-    CREATE TABLE IF NOT EXISTS users (
-      id INT AUTO_INCREMENT PRIMARY KEY,
-      name VARCHAR(100) NOT NULL,
-      email VARCHAR(100) NOT NULL,
-      age INT NOT NULL
-    );
-  `;
-  
-  // Example query
-  db.query(createTableQuery, (err, results) => {
-    if (err) {
-      console.error("Error fetching data:", err);
-      return;
-    }
-    console.log("Table created successfully.");
-    console.log("Users:", results);
-  });
 
 // Serve uploaded images statically
 app.use("/uploads", express.static(path.join(path.dirname(__dirname), "uploads")));
@@ -74,6 +38,49 @@ const upload = multer({ storage });
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+// CREATE TABLE IF NOT EXISTS auctionItems (
+//     id INT AUTO_INCREMENT PRIMARY KEY,        -- Unique identifier for each item
+//     Title VARCHAR(255) NOT NULL,              -- Title of the item
+//     Des TEXT,                                 -- Description of the item
+//     CurrentHighest INT DEFAULT 0,  -- Current highest bid (e.g., money)
+//     Total INT DEFAULT 0,                      -- Total bids or count
+//     StartTime DATETIME NOT NULL,              -- Auction start time
+//     EndTime DATETIME NOT NULL,                -- Auction end time
+//     Status INT DEFAULT 0,                     -- Status of the item
+//     Publisher VARCHAR(255) NOT NULL,          -- Publisher's name or ID
+//     Owner VARCHAR(255) NOT NULL,              -- Owner's name or ID
+//     Favorites INT DEFAULT 0                   -- Total favorites or likes
+// );
+
+// Get the current datetime
+const currentDate = new Date();
+const formattedDate = currentDate.toISOString().slice(0, 19).replace("T", " ");
+
+(async () => {
+    try {
+      // Add an item
+      const newItemId = await addItem(
+        "Vintage Lamp",
+        "A beautiful vintage lamp from the 1950s.",
+        50,
+        10,
+        currentDate,
+        currentDate,
+        1,
+        "JohnDoe",
+        "JaneDoe",
+        5
+      );
+      console.log("New Item ID:", newItemId);
+  
+      // Fetch all items
+      const items = await getItems();
+      console.log("All Items:", items);
+    } catch (err) {
+      console.error("Error:", err);
+    }
+  })();
+
 // Endpoint to handle image uploads
 app.post("/uploads", upload.single("image"), (req, res) => {
   if (!req.file) {
@@ -85,12 +92,17 @@ app.post("/uploads", upload.single("image"), (req, res) => {
 
 
 // Define routes
-app.get("/api", (req, res) => {
+app.get("/api", async (req, res) => {
     console.log("Request Details:");
     console.log("URL:", req.url); // Log the request URL
     console.log("Method:", req.method); // Log the request method (e.g., GET, POST)
     console.log("Headers:", req.headers); // Log the request headers
     console.log("Query Parameters:", req.query); 
+
+
+    const goodsItems =  await getItems();
+
+    console.log("Goods Items:", goodsItems);
 
     res.json(goodsItems);
 });
