@@ -15,6 +15,7 @@ const pool = mysql.createPool({
 const createTableQuery = `
   CREATE TABLE IF NOT EXISTS auctionItems (
       id INT AUTO_INCREMENT PRIMARY KEY,        -- Unique identifier for each item
+      Address VARCHAR(255) NOT NULL,            -- Address of users Metamask        
       Title VARCHAR(255) NOT NULL,              -- Title of the item
       Des TEXT,                                 -- Description of the item
       Imgurl TEXT,
@@ -23,7 +24,7 @@ const createTableQuery = `
       Total INT DEFAULT 0,                      -- Total bids or count
       StartTime DATETIME NOT NULL,              -- Auction start time
       EndTime DATETIME NOT NULL,                -- Auction end time
-      Status INT DEFAULT 0,                     -- Status of the item
+      Status INT DEFAULT 0,                     -- Status of the item, 0 = available, 1 = sold
       Publisher VARCHAR(255) NOT NULL,          -- Publisher's name or ID
       Owner VARCHAR(255) NOT NULL,              -- Owner's name or ID
       Favorites INT DEFAULT 0                   -- Total favorites or likes
@@ -47,3 +48,4 @@ const initializeDatabase = async () => {
 initializeDatabase();
 
 module.exports = pool;
+

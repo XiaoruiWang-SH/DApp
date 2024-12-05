@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useContext }  from 'react';
 import { Outlet, Link } from 'react-router-dom';
 import './LayoutStyle.css';
 import home_icon from '../res/home_icon.png';
@@ -12,14 +12,28 @@ import logout_icon from '../res/logout_icon.png';
 import { useNavigate } from "react-router-dom";
 import { useState, useRef, useEffect } from 'react';
 
+import { connectWallet, register} from '../contracts/interaction';
+import { AppContext,  AppProvider} from './Context';
+
 
 const Layout = () => {
     const navigate = useNavigate();
-    const [login, setLogin] = useState(false);
+    // const [login, setLogin] = useState(false);
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const menuRef = useRef(null); // Reference to the menu container
 
+    const { login, setLogin, address, setAddress} = useContext(AppContext);
+
+
     useEffect(() => {
+        console.log("Login:", login);
+        console.log("Address:", address);
+
+        const storedLoginStatus = localStorage.getItem("isLoggedIn");
+        if (storedLoginStatus === "true") {
+            setLogin(true);
+        }
+
         const handleClickOutside = (event) => {
           // Check if the clicked element is outside the menu
           if (menuRef.current && !menuRef.current.contains(event.target)) {
@@ -33,17 +47,27 @@ const Layout = () => {
         return () => {
             document.removeEventListener("mousedown", handleClickOutside);
         };
+        
+        
     }, []);
 
     const homeIconClick = () => {
         navigate("/");
     };
 
-    const loginClick = () => {
+    const loginClick = async () => {
+        
+        const address = await connectWallet();
+        console.log("Contract Address:", address);
         setLogin(true);
+        setAddress(address);
+
+        localStorage.setItem("isLoggedIn", "true");
+
     };
     const logoutClick = () => {
         setLogin(false);
+        localStorage.removeItem("isLoggedIn");
     };
 
     const onProcessClick = () => {
