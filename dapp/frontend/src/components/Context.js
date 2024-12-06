@@ -6,7 +6,7 @@ const AppContext = createContext();
 const AppProvider = ({ children }) => {
   // Define multiple states or values
   const [login, setLogin] = useState(false);
-  const [address, setAddress] = useState("fake");
+  const [address, setAddress] = useState("");
 
   // Bundle all states into one object
   const value = {

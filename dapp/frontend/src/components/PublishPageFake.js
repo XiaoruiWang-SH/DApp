@@ -1,7 +1,8 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import "./PublishPageFakeStyle.css";
 import axios from 'axios';
 import { useNavigate } from "react-router-dom";
+import { AppContext,  AppProvider} from './Context';
 
 export default function PublishPageFake() {
  
@@ -9,14 +10,21 @@ export default function PublishPageFake() {
   const [pictures, setPictures] = useState([]);
   const [description, setDescription] = useState("");
   const [startingBid, setStartingBid] = useState(0);
-  const [startingTime, setStartingTime] = useState("");
+  const [enddatetime, setEnddatetime] = useState("");
+  const [enddate, setEnddate] = useState("");
+  const [endtime, setEndtime] = useState("");
   const [message, setMessage] = useState("");
   const [pictureurl, setPictureurl] = useState("");
 
   const navigate = useNavigate();
 
+  const { login, setLogin, address, setAddress} = useContext(AppContext);
+
   const handleImageUpload = async (event) => {
     console.log("Files:", event.target.files);
+    console.log('access address:', address);
+    
+
     const img = event.target.files[0];
     if (!img) {
         return;
@@ -45,17 +53,44 @@ export default function PublishPageFake() {
     setPictures((prev) => [...prev, ...files]);
   };
 
+  const formatDate = (date) => {
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, "0"); // Months are 0-based
+    const day = String(date.getDate()).padStart(2, "0");
+    const hours = String(date.getHours()).padStart(2, "0");
+    const minutes = String(date.getMinutes()).padStart(2, "0");
+    const seconds = String(date.getSeconds()).padStart(2, "0");
+  
+    return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+  };
+
   const handleSubmit = async (event) => {
+    console.log("address:", address);
+    if (!address || address === "fake") {
+        alert("Please login");
+        return;
+    }
+
+    if (!title || !pictures.length || !description || !startingBid || !enddate || !endtime) {
+      alert("Please fill in all the fields");
+      return;
+    }
+
     event.preventDefault();
     const currentDate = new Date();
-    const formattedDate = currentDate.toISOString().slice(0, 19).replace("T", " ");
+    const formattedCurrentDate = formatDate(currentDate);
+
+    const endDateTime = new Date(`${enddate}T${endtime}`);
+    const formattedEndDateTime = formatDate(endDateTime);
 
     const formData = {
+      address,
       title,
       pictureurl,
       description,
       startingBid,
-      formattedDate,
+      formattedCurrentDate,
+      formattedEndDateTime,
     };
     console.log("Form Submitted:", formData);
     try {
@@ -76,15 +111,19 @@ export default function PublishPageFake() {
 
   return (
     <div className="form-container">
+      <div className="form-title">
+        <text>Publish an auction item</text>
+      </div>
       <form onSubmit={handleSubmit}>
         {/* Title */}
         <div className="form-group">
           <label htmlFor="title">Title:</label>
           <input
+          className="form-group-items"
             type="text"
             id="title"
             value={title}
-            placeholder="please input goods title"
+            placeholder="please input auction item's title"
             onChange={(e) => setTitle(e.target.value)}
           />
         </div>
@@ -105,7 +144,7 @@ export default function PublishPageFake() {
               <label htmlFor="upload" className="add-picture-label">
                 +
               </label>
-              <input
+              <input className="form-group-items"
                 type="file"
                 id="upload"
                 accept="image/*"
@@ -119,7 +158,7 @@ export default function PublishPageFake() {
         {/* Description */}
         <div className="form-group">
           <label>Description:</label>
-          <textarea
+          <textarea className="form-group-items"
             rows="5"
             value={description}
             onChange={(e) => setDescription(e.target.value)}
@@ -130,7 +169,7 @@ export default function PublishPageFake() {
         {/* Starting Bid */}
         <div className="form-group">
           <label htmlFor="startingBid">Starting bid:</label>
-          <input
+          <input className="form-group-items"
             type="number"
             id="startingBid"
             value={startingBid}
@@ -139,17 +178,28 @@ export default function PublishPageFake() {
           />
         </div>
 
-        {/* Starting Time */}
+        {/* End Time */}
         <div className="form-group">
-          <label htmlFor="startingTime">Starting Time:</label>
+          <label htmlFor="EndTime">End Time:</label>
+          <div className="endTimeBlock">
           <input
-            type="text"
-            id="startingTime"
-            value={startingTime}
-            placeholder="YYYY/MM/DD - YYYY/MM/DD"
-            onChange={(e) => setStartingTime(e.target.value)}
+            className="endtime-date"
+            type="date"
+            id="enddate"
+            value={enddate}
+            onChange={(e) => setEnddate(e.target.value)}
           />
+          <input
+          className="endtime-time"
+            type="time"
+            id="endTime"
+            value={endtime}
+            onChange={(e) => setEndtime(e.target.value)}
+          />
+          </div>
+          
         </div>
+        
 
         {/* Submit Button */}
         <button type="submit" className="publish-button">

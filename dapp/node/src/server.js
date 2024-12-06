@@ -3,7 +3,7 @@ const cors = require("cors");
 const multer = require("multer");
 const path = require("path");
 
-const { getItems, getItemById, addItem } = require("./db/queries");
+const { getItems, getItemById, addItem, getItemsMypublish, getItemsMybought } = require("./db/queries");
 
 const app = express();
 
@@ -125,31 +125,34 @@ app.get("/item", async (req, res) => {
     res.json(auctionitem);
 });
 
-// app.post("/publish", (req, res) => {
-//     console.log("publish, Request Details:");
-//     console.log("URL:", req.url); // Log the request URL
-//     console.log("Method:", req.method); // Log the request method (e.g., GET, POST)
-//     console.log("Headers:", req.headers); // Log the request headers
-//     console.log("Query Parameters:", req.query); 
-//     console.log("Request Body:", req.body); // Log the request body
+app.get("/mypublish", async (req, res) => {
+  const { address } = req.query;
+  console.log("Request Details - address:" + address);
+  let auctionitem = [];
+  try {
+      auctionitem = await getItemsMypublish(address);
+  } catch (error) {
+      console.error("Error:", error);
+  }
+  console.log("Item Description:", auctionitem);
+  res.json(auctionitem);
+});
 
-//     res.json({ message: "Item added successfully!" });
-// });
+  // const formData = {
+  //   address,
+  //   title,
+  //   pictureurl,
+  //   description,
+  //   startingBid,
+  //   formattedCurrentDate,
+  //   formattedEndDateTime,
+  // };
+  // const addItem = async (title, des, imgurl, startBid, currentHighest, total, startTime, endTime, status, publisher, owner, favorites)
 
-
-// const formData = {
-//     title,
-//     pictureurl,
-//     description,
-//     startingBid,
-//     formattedDate,
-//   };
 app.post("/publish", async (req, res) => {
-    const { title, pictureurl, description, startingBid, formattedDate } = req.body;
+    const { address, title, pictureurl, description, startingBid, formattedCurrentDate, formattedEndDateTime } = req.body;
   
-    console.log("Received data:", { title, pictureurl, description, startingBid, formattedDate });
-
-    // const addItem = async (title, des, imgurl, startBid, currentHighest, total, startTime, endTime, status, publisher, owner, favorites)
+    console.log("Received data:", { address, title, pictureurl, description, startingBid, formattedCurrentDate, formattedEndDateTime });
 
     try {
         // Add an item
@@ -160,10 +163,10 @@ app.post("/publish", async (req, res) => {
             startingBid,
             0,
             0,
-            formattedDate,
-            formattedDate,
+            formattedCurrentDate,
+            formattedEndDateTime,
             0,
-          "",
+          address,
           "",
           0
         );

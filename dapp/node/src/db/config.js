@@ -9,13 +9,13 @@ const pool = mysql.createPool({
   waitForConnections: true,
   connectionLimit: 10,
   queueLimit: 0,
+  dateStrings: true,
 });
 
 // SQL query to create the table
 const createTableQuery = `
-  CREATE TABLE IF NOT EXISTS auctionItems (
+  CREATE TABLE IF NOT EXISTS auctionItems2 (
       id INT AUTO_INCREMENT PRIMARY KEY,        -- Unique identifier for each item
-      Address VARCHAR(255) NOT NULL,            -- Address of users Metamask        
       Title VARCHAR(255) NOT NULL,              -- Title of the item
       Des TEXT,                                 -- Description of the item
       Imgurl TEXT,
@@ -36,7 +36,7 @@ const initializeDatabase = async () => {
   try {
     const connection = await pool.getConnection();
     await connection.query(createTableQuery);
-    console.log("Table `auctionItems` created or already exists.");
+    console.log("Table `auctionItems2` created or already exists.");
     connection.release(); // Release the connection back to the pool
   } catch (err) {
     console.error("Error creating table:", err);

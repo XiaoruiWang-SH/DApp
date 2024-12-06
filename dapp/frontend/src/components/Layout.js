@@ -9,7 +9,7 @@ import balance_icon from '../res/balance_icon.png';
 import buy_icon from '../res/buy_icon.png';
 import logout_icon from '../res/logout_icon.png';
 
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation} from "react-router-dom";
 import { useState, useRef, useEffect } from 'react';
 
 import { connectWallet, register} from '../contracts/interaction';
@@ -21,6 +21,7 @@ const Layout = () => {
     // const [login, setLogin] = useState(false);
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const menuRef = useRef(null); // Reference to the menu container
+    const location = useLocation();
 
     const { login, setLogin, address, setAddress} = useContext(AppContext);
 
@@ -30,8 +31,10 @@ const Layout = () => {
         console.log("Address:", address);
 
         const storedLoginStatus = localStorage.getItem("isLoggedIn");
+        const storedAddress = localStorage.getItem("address");
         if (storedLoginStatus === "true") {
             setLogin(true);
+            setAddress(storedAddress);
         }
 
         const handleClickOutside = (event) => {
@@ -59,15 +62,22 @@ const Layout = () => {
         
         const address = await connectWallet();
         console.log("Contract Address:", address);
+        if (!address) {
+            return;
+        }
+        alert("Login successful!, address: " + address);
         setLogin(true);
         setAddress(address);
 
         localStorage.setItem("isLoggedIn", "true");
+        localStorage.setItem("address", address);
 
     };
     const logoutClick = () => {
         setLogin(false);
+        setAddress("");
         localStorage.removeItem("isLoggedIn");
+        localStorage.removeItem("address");
     };
 
     const onProcessClick = () => {
@@ -94,12 +104,13 @@ const Layout = () => {
         closeMenu();
         console.log("myfavouriteClick");
     };
+
     const buyClick = () => {
         navigate("/myBought");
         closeMenu();
         console.log("buyClick");
     };
-    const soldClick = () => {
+    const myPublishClick = () => {
         navigate("/mySold");
         closeMenu();
         console.log("soldClick");
@@ -114,24 +125,24 @@ const Layout = () => {
             <div className='user-menu-container' ref={menuRef}>
             <div className='popup-menu' >
                 <ul>
-                    <li onClick={myfavouriteClick}>
+                    <li onClick={myPublishClick}>
                         <div className='popup-menu-item'>
-                            <img src={favourite_icon} alt="Icon"/>
-                            <text>{"My Favorites"}</text>
+                            <img src={sold_icon} alt="Icon"/>
+                            <text>{"My Publish"}</text>
                         </div>
                     </li>
                     <li onClick={buyClick}>
                         <div className='popup-menu-item'>
                             <img src={buy_icon} alt="Icon"/>
-                            <text>{"Buy"}</text>
+                            <text>{"My bought"}</text>
                         </div>
                     </li>
-                    <li onClick={soldClick}>
+                    {/* <li onClick={soldClick}>
                         <div className='popup-menu-item'>
                             <img src={sold_icon} alt="Icon"/>
                             <text>{"Sold"}</text>
                         </div>
-                    </li>
+                    </li> */}
                     <li onClick={balanceClick}>
                         <div  className='popup-menu-item'>
                             <img src={balance_icon} alt="Icon"/>
@@ -192,9 +203,9 @@ const Layout = () => {
                     Publish
                 </button>
 
-                <button className='button' hidden={!login} onClick={onProcessClick}>
+                {/* <button className='button' hidden={!login} onClick={onProcessClick}>
                     onProcess
-                </button>
+                </button> */}
                 
                 <HeaderLogin />
             </div>
@@ -204,9 +215,15 @@ const Layout = () => {
       
     const Content = () => {
         return (
+        <>
+        {/* <div>
+            <h5>{location.pathname}</h5>
+            <hr />
+        </div> */}
           <main className='main-section'>
             <Outlet /> {/* Dynamically replaced by route-specific content */}
           </main>
+          </>
         );
       };
 
@@ -239,7 +256,9 @@ const Layout = () => {
     <div className='layout'>
       <Header />
       {/* <NavList /> */}
+      
       <div className='container'>
+        
           <Content />
       </div>
       <Footer />
