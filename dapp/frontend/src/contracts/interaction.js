@@ -115,15 +115,16 @@ const listenForAuctionCreated = async (contract, callback) => {
 
 const placeBid = async (contract, auctionId, bidAmount) => {
     try {
-        
+        console.log("Placing bid on auction:", auctionId, "with amount:", bidAmount);
         const tx = await contract.placeBid(auctionId, {
-            value: ethers.utils.parseEther(bidAmount), 
+            value: ethers.utils.parseEther(bidAmount.toString()), 
           });
 
         const receipt = await tx.wait();
         console.log("Bid placed successfully:", receipt);
     } catch (error) {
         console.error("Error placing bid:", error);
+        alert(error.message);
     }
 }
 
@@ -134,5 +135,34 @@ const listenForBidPlaced = async (contract) => {
 };
 
 
+const getAuctionHighest = async (contract, auctionId) => { 
+    console.log("Getting auction details for ID:", auctionId);
+    try {
+        const auction = await contract.getAuction(auctionId);
+        console.log("Auction details:", auction);
+        const highest = ethers.utils.formatEther(auction.highestBid);
+        return highest;
+    } catch (error) {
+        console.error("Error getting auction details:", error);
+    }
+};
 
-export {connectWallet, connection, registerUser, listenForUserRegistration, isUserRegistered, createAuction, listenForAuctionCreated, placeBid, listenForBidPlaced};
+
+// mapping(uint256 => mapping(address => uint256)) public bids;   // Records bids for each auction by bidder address.
+// // bids[auctionId][Bob] = 2 ether
+
+const getBidHistory = async (contract, auctionId, address) => {
+    try {
+        const history = await contract.bids(auctionId, address);
+        console.log(`Bid history for (${auctionId}):`, history);
+        return history;
+    } catch (error) {
+        console.error("Error checking user registration:", error);
+        return [];
+    }
+};
+
+
+
+export {connectWallet, connection, registerUser, listenForUserRegistration, isUserRegistered, 
+    createAuction, listenForAuctionCreated, placeBid, listenForBidPlaced, getAuctionHighest, getBidHistory};

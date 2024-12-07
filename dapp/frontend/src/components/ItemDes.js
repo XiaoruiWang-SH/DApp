@@ -1,22 +1,24 @@
 import React, { useEffect } from "react";
 import './ItemDesStyle.css';
-import { useState } from 'react';
+import { useState, useContext } from 'react';
 import { useLocation } from "react-router-dom";
 import axios from 'axios';
-import {connectWallet, connection, placeBid, listenForBidPlaced} from '../contracts/interaction';
+import { AppContext,  AppProvider} from './Context';
+import {connectWallet, connection, placeBid, listenForBidPlaced, getAuctionHighest, getBidHistory} from '../contracts/interaction';
 
 export default function ItemDes() {
     const location = useLocation();
     const {id} = location.state || {};
-    console.log("itemID: " + id);
     const [bidclick, setBidclick] = useState(false);
+    const { login, setLogin, address, setAddress} = useContext(AppContext);
 
     const bidItemClick = () => {
         console.log("bidItemClick");
         setBidclick(true);
     };
 
-    const [bidAmount, setBidAmount] = useState(9500);
+    const [bidAmount, setBidAmount] = useState(0);
+    const [highestbid, setHighestbid] = useState(0);
 
     const handleChange = (event) => {
         setBidAmount(event.target.value);
@@ -27,7 +29,7 @@ export default function ItemDes() {
 
         const auctionContract = await connection();
         await listenForBidPlaced(auctionContract);
-        await placeBid(auctionContract, id, bidAmount);
+        await placeBid(auctionContract, item.AuctionId, bidAmount);
 
       };
 
@@ -47,6 +49,20 @@ export default function ItemDes() {
         }).then((response) => {
                 console.log(response.data);
                 setItem(response.data);
+                setBidAmount(response.data.StartBid);
+
+                (async () => {
+                    const auctionContract = await connection();
+                    console.log("item: ", item);
+                    console.log("Auction ID: ", response.data.AuctionId);
+                    const highest = await getAuctionHighest(auctionContract, response.data.AuctionId);
+                    console.log("Highest bid: ", highest);
+                    setHighestbid(highest);
+
+                    const history = await getBidHistory(auctionContract, response.data.AuctionId, address);
+                    console.log("Bid history: ", history);
+                })();
+
             })
             .catch((error) => {
                 if (error.response) {
@@ -56,6 +72,9 @@ export default function ItemDes() {
                     console.log("Error:", error.message);
                   }
             });
+
+
+            
 
         
     }, [setItem]);
@@ -130,7 +149,6 @@ export default function ItemDes() {
             </div>
           );
       };
-      console.log("item.image: " + item.image);
 
   return (
     <div className="page-container">
@@ -154,7 +172,7 @@ export default function ItemDes() {
                 <div className="acutionItem">
                     {/* current highest bid */}
                     <text>Current highest bid </text>
-                    <text>{item.CurrentHighest} </text>
+                    <text>{highestbid} </text>
                 </div>
                 <div  className="acutionItem">
                     {/* total bid */}
