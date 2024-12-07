@@ -101,7 +101,7 @@ export default function ItemDes() {
         }
 
         return (
-            <>
+            <div>
             <text>Bid History</text>
             <div className="bid-history-container">
             <table className="bid-history-table">
@@ -121,7 +121,7 @@ export default function ItemDes() {
                 </tbody>
             </table>
             </div>
-            </>
+            </div>
           );
       };
       console.log("item.image: " + item.image);

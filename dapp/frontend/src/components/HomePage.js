@@ -11,7 +11,7 @@ export default function HomePage() {
 
     useEffect(() => {
         axios.interceptors.request.use((config) => {
-            console.log("Request Headers:", config.headers);
+            // console.log("Request Headers:", config.headers);
             return config;
         });
 

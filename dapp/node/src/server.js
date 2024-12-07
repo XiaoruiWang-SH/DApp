@@ -94,11 +94,11 @@ app.post("/uploads", upload.single("image"), (req, res) => {
 
 // Define routes
 app.get("/api", async (req, res) => {
-    console.log("Request Details:");
-    console.log("URL:", req.url); // Log the request URL
-    console.log("Method:", req.method); // Log the request method (e.g., GET, POST)
-    console.log("Headers:", req.headers); // Log the request headers
-    console.log("Query Parameters:", req.query); 
+    // console.log("Request Details:");
+    // console.log("URL:", req.url); // Log the request URL
+    // console.log("Method:", req.method); // Log the request method (e.g., GET, POST)
+    // console.log("Headers:", req.headers); // Log the request headers
+    // console.log("Query Parameters:", req.query); 
 
     let goodsItems = [];
     try {

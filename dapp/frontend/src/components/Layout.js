@@ -12,8 +12,9 @@ import logout_icon from '../res/logout_icon.png';
 import { useNavigate, useLocation} from "react-router-dom";
 import { useState, useRef, useEffect } from 'react';
 
-import { connectWallet, register} from '../contracts/interaction';
+import {connectWallet, connection, registerUser, listenForUserRegistration} from '../contracts/interaction';
 import { AppContext,  AppProvider} from './Context';
+
 
 
 const Layout = () => {
@@ -65,6 +66,10 @@ const Layout = () => {
         if (!address) {
             return;
         }
+        const auctionContract = await connection();
+        await listenForUserRegistration(auctionContract);
+        await registerUser(auctionContract);
+
         alert("Login successful!, address: " + address);
         setLogin(true);
         setAddress(address);
@@ -128,13 +133,13 @@ const Layout = () => {
                     <li onClick={myPublishClick}>
                         <div className='popup-menu-item'>
                             <img src={sold_icon} alt="Icon"/>
-                            <text>{"My Publish"}</text>
+                            <text>My Publish</text>
                         </div>
                     </li>
                     <li onClick={buyClick}>
                         <div className='popup-menu-item'>
                             <img src={buy_icon} alt="Icon"/>
-                            <text>{"My bought"}</text>
+                            <text>My bought</text>
                         </div>
                     </li>
                     {/* <li onClick={soldClick}>
@@ -146,7 +151,7 @@ const Layout = () => {
                     <li onClick={balanceClick}>
                         <div  className='popup-menu-item'>
                             <img src={balance_icon} alt="Icon"/>
-                            <text>{"My Balance"}</text>
+                            <text>My Balance</text>
                         </div>
                     </li>
                 </ul>
@@ -155,7 +160,7 @@ const Layout = () => {
                     <li onClick={closeMenu}>
                         <div className='popup-menu-item' onClick={logoutClick}>
                             <img src={logout_icon} alt="Icon"/>
-                            <text>{"Logout"}</text>
+                            <text>Logout</text>
                         </div>
                     </li>
                 </ul>
@@ -194,7 +199,7 @@ const Layout = () => {
                     <img src={home_icon} alt="Icon" />
                 </div>
                 <div className='header-title'>
-                    <text>{"D-Auction System"}</text>
+                    <text>D-Auction System</text>
                 </div>
                 
             </div>

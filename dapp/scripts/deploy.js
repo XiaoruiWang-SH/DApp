@@ -22,17 +22,17 @@ async function main() {
 
   console.log("Account balance:", (await deployer.getBalance()).toString());
 
-  const CrowdfundContract = await ethers.getContractFactory("Crowdfund");
-  const crowdfundContract = await CrowdfundContract.deploy();
-  await crowdfundContract.deployed();
+  const AuctionContract = await ethers.getContractFactory("Auction");
+  const auctionContract = await AuctionContract.deploy();
+  await auctionContract.deployed();
 
-  console.log("Crowdfund Contract address:", crowdfundContract.address);
+  console.log("Auction Contract address:", auctionContract.address);
 
   // We also save the contract's artifacts and address in the frontend directory
-  saveFrontendFiles(crowdfundContract);
+  saveFrontendFiles(auctionContract);
 }
 
-function saveFrontendFiles(crowdfundContract) {
+function saveFrontendFiles(auctionContract) {
   const fs = require("fs");
   const contractsDir = path.join(__dirname, "..", "frontend", "src", "contracts");
 
@@ -41,15 +41,15 @@ function saveFrontendFiles(crowdfundContract) {
   }
 
   fs.writeFileSync(
-    path.join(contractsDir, "contract-address.json"),
-    JSON.stringify({ Crowdfund: crowdfundContract.address }, undefined, 2)
+    path.join(contractsDir, "auction-contract-address.json"),
+    JSON.stringify({ Auction: auctionContract.address }, undefined, 2)
   );
 
-  const CrowdfundArtifact = artifacts.readArtifactSync("Crowdfund");
+  const AuctionArtifact = artifacts.readArtifactSync("Auction");
 
   fs.writeFileSync(
-    path.join(contractsDir, "Crowdfund.json"),
-    JSON.stringify(CrowdfundArtifact, null, 2)
+    path.join(contractsDir, "Auction.json"),
+    JSON.stringify(AuctionArtifact, null, 2)
   );
 }
 
