@@ -21,6 +21,7 @@
     height: 180px;
     object-fit: cover;
     border-bottom: 1px solid #ddd;
+    z-index: 20;
   }
 
   .card-stamp {
@@ -30,6 +31,15 @@
     height: 100px;       /* Define the height */
     object-fit: cover;  /* Ensure the image covers the defined area */
     z-index: 1;         /* Ensure the image layers properly if needed */
+}
+
+.card-end {
+  position: absolute; /* Position relative to the card */
+  bottom: 0;          /* Align it to the bottom of the card */
+  left: 0;            /* Align it to the left of the card */
+  height: 100px;       /* Define the height */
+  object-fit: cover;  /* Ensure the image covers the defined area */
+  z-index: 1;         /* Ensure the image layers properly if needed */
 }
   
   /* Card Content */
@@ -60,4 +70,6 @@
     font-size: small;
     text-align: right;
   }
+
+  
   

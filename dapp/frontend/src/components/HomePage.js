@@ -39,7 +39,8 @@ export default function HomePage() {
     const navigate = useNavigate();
 
     const handleItemClick = (item) => {
-        navigate("/itemDes", { state: { id: item.id } });
+        const timeEnd = new Date(item.EndTime) > new Date() ? false : true
+        navigate("/itemDes", { state: { id: item.id, isTimeEnd: timeEnd } });
         console.log("Item clicked:", item.id);
     };
 
@@ -56,6 +57,7 @@ export default function HomePage() {
                         totalBids={goodsItem.Total}
                         endTime={goodsItem.EndTime}
                         stampHidden={true}
+                        timeEnd={new Date(goodsItem.EndTime) > new Date() ? false : true}
                         onClick={() => handleItemClick(goodsItem)}
                     />
                 ))

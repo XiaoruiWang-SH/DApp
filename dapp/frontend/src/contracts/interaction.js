@@ -163,6 +163,41 @@ const getBidHistory = async (contract, auctionId, address) => {
 };
 
 
+//  // End Auction
+//  function endAuction(uint256 _auctionId) external 
+//  auctionExists(_auctionId) 
+// {
+//  AuctionItem storage auction = auctions[_auctionId];
+//  require(!auction.ended, "Auction already ended");
+//  require(block.timestamp >= auction.endTime || msg.sender == auction.seller, 
+//          "Auction still active");
+
+//  auction.ended = true;
+//  auction.active = false;
+
+//  if (auction.highestBid >= auction.reservePrice) {
+//      // Transfer funds to seller
+//      payable(auction.seller).transfer(auction.highestBid);
+//      emit AuctionEnded(_auctionId, auction.highestBidder, auction.highestBid);
+//  } else {
+//      // Refund highest bidder if reserve price not met
+//      if (auction.highestBidder != address(0)) {
+//          payable(auction.highestBidder).transfer(auction.highestBid);
+//          emit RefundProcessed(auction.highestBidder, auction.highestBid);
+//      }
+//  }
+// }
+
+const endAuction = async (contract, auctionId) => {
+    try {
+        console.log("Ending auction:", auctionId);
+        const tx = await contract.endAuction(auctionId);
+        const receipt = await tx.wait();
+        console.log("Auction ended successfully:", receipt);
+    } catch (error) {
+        console.error("Error ending auction:", error);
+    }
+};
 
 export {connectWallet, connection, registerUser, listenForUserRegistration, isUserRegistered, 
-    createAuction, listenForAuctionCreated, placeBid, listenForBidPlaced, getAuctionHighest, getBidHistory};
+    createAuction, listenForAuctionCreated, placeBid, listenForBidPlaced, getAuctionHighest, getBidHistory, endAuction};

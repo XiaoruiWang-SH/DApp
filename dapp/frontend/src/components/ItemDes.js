@@ -4,13 +4,14 @@ import { useState, useContext } from 'react';
 import { useLocation } from "react-router-dom";
 import axios from 'axios';
 import { AppContext,  AppProvider} from './Context';
-import {connectWallet, connection, placeBid, listenForBidPlaced, getAuctionHighest, getBidHistory} from '../contracts/interaction';
+import {connectWallet, connection, placeBid, listenForBidPlaced, getAuctionHighest, getBidHistory, endAuction} from '../contracts/interaction';
 
 export default function ItemDes() {
     const location = useLocation();
-    const {id} = location.state || {};
+    const {id, isTimeEnd} = location.state || {};
     const [bidclick, setBidclick] = useState(false);
     const { login, setLogin, address, setAddress} = useContext(AppContext);
+
 
     const bidItemClick = () => {
         console.log("bidItemClick");
@@ -63,6 +64,16 @@ export default function ItemDes() {
                     console.log("Bid history: ", history);
                 })();
 
+                if (isTimeEnd) { // TODO: check if the auction is ended
+                    (
+                        async () => {
+                            const auctionContract = await connection();
+                            const highest = await endAuction(auctionContract, item.AuctionId);
+                            // setHighestbid(highest);
+                        }
+                    )();
+                }
+
             })
             .catch((error) => {
                 if (error.response) {
@@ -72,10 +83,6 @@ export default function ItemDes() {
                     console.log("Error:", error.message);
                   }
             });
-
-
-            
-
         
     }, [setItem]);
 

@@ -1,7 +1,8 @@
 import React from 'react';
 import './GoodsItemStyle.css';
+import end_icon from '../res/end_icon.png';
 
-export default function GoodsItem({ title, image, startBid, highestBid, totalBids, endTime, onClick, stamp, stampHidden }) {
+export default function GoodsItem({ title, image, startBid, highestBid, totalBids, endTime, onClick, stamp, stampHidden, timeEnd }) {
     // console.log("highestBid:" + highestBid);
     // console.log("totalBids:" + totoalBids);
   return (
@@ -30,7 +31,9 @@ export default function GoodsItem({ title, image, startBid, highestBid, totalBid
         <div>
           <img src={stamp} alt="Icon" className="card-stamp" hidden={stampHidden}/>
         </div>
-        
+        <div>
+          <img src={end_icon} alt="Icon" className="card-end" hidden={!timeEnd}/>
+        </div>
       </div>
     </div>
   );
