@@ -12,7 +12,7 @@ import logout_icon from '../res/logout_icon.png';
 import { useNavigate, useLocation} from "react-router-dom";
 import { useState, useRef, useEffect } from 'react';
 
-import {connectWallet, connection, registerUser, listenForUserRegistration} from '../contracts/interaction';
+import {connectWallet, connection, registerUser, listenForUserRegistration, isUserRegistered} from '../contracts/interaction';
 import { AppContext,  AppProvider} from './Context';
 
 
@@ -28,9 +28,6 @@ const Layout = () => {
 
 
     useEffect(() => {
-        console.log("Login:", login);
-        console.log("Address:", address);
-
         const storedLoginStatus = localStorage.getItem("isLoggedIn");
         const storedAddress = localStorage.getItem("address");
         if (storedLoginStatus === "true") {
@@ -61,21 +58,43 @@ const Layout = () => {
 
     const loginClick = async () => {
         
-        const address = await connectWallet();
-        console.log("Contract Address:", address);
-        if (!address) {
+        const userAddress = await connectWallet();
+        if (!userAddress) {
             return;
         }
-        const auctionContract = await connection();
-        await listenForUserRegistration(auctionContract);
-        await registerUser(auctionContract);
+        console.log("Current User Address:", userAddress);
 
-        alert("Login successful!, address: " + address);
+        const auctionContract = await connection();
+        const isRegistered = await isUserRegistered(auctionContract, userAddress);
+        if (!isRegistered) {
+            const isConfirmed = window.confirm("You are not registered yet. Would you like to register now?");
+            if (isConfirmed) {
+                console.log("Confirmed!");
+                await listenForUserRegistration(auctionContract);
+                const result = await registerUser(auctionContract);
+                if (!result) {
+                    alert("Failed to register user.");
+                    return;
+                }
+                alert("Register and Login successful!, address: " + userAddress);
+                setLogin(true);
+                setAddress(userAddress);
+
+                localStorage.setItem("isLoggedIn", "true");
+                localStorage.setItem("address", userAddress);
+
+            } else {
+                console.log("Cancelled!");
+            }
+            return;
+        }
+
+        alert("Login successful!, address: " + userAddress);
         setLogin(true);
-        setAddress(address);
+        setAddress(userAddress);
 
         localStorage.setItem("isLoggedIn", "true");
-        localStorage.setItem("address", address);
+        localStorage.setItem("address", userAddress);
 
     };
     const logoutClick = () => {

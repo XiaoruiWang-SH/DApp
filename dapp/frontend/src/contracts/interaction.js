@@ -46,8 +46,10 @@ const registerUser = async (contract) => {
             // Find the emitted event in the logs
             const event = receipt.events.find(event => event.event === "UserRegistered");
             console.log("Event details:", event.args);
+            return true
         } else {
             console.log("Transaction failed.");
+            return false
         }
     } catch (error) {
         console.error("Error registering user:", error);
@@ -60,4 +62,77 @@ const listenForUserRegistration = async (contract) => {
     });
 };
 
-export {connectWallet, connection, registerUser, listenForUserRegistration};
+
+const isUserRegistered = async (contract, userAddress) => {
+    try {
+        const isRegistered = await contract.registeredUsers(userAddress);
+        console.log(`Is user registered (${userAddress}):`, isRegistered);
+        return isRegistered;
+    } catch (error) {
+        console.error("Error checking user registration:", error);
+        return false;
+    }
+};
+
+
+const createAuction = async (contract, title, startingPrice, reservePrice, startDate, endDate) => {
+    try {
+        const description = title; // Description of the auction item
+        const startedPrice = ethers.utils.parseEther(startingPrice); // Starting price in Ether (e.g., 0.1 ETH)
+        const reservedPrice = ethers.utils.parseEther(reservePrice); // Reserve price in Ether (e.g., 0.5 ETH)
+        
+        const startTimestamp = Math.floor(new Date(startDate).getTime() / 1000);
+        const endTimestamp = Math.floor(new Date(endDate).getTime() / 1000);
+        const durationInSeconds = endTimestamp - startTimestamp;
+        const duration = durationInSeconds; // Duration in seconds (1 day)
+        console.log("Duration:", duration);
+
+        // Call the createAuction function
+        const tx = await contract.createAuction(description, startedPrice, reservedPrice, duration);
+
+        // Wait for the transaction to be mined
+        const receipt = await tx.wait();
+        const event = receipt.events.find(e => e.event === "AuctionCreated");
+
+        if (event) {
+            const auctionId = event.args.auctionId; // Get the emitted _auctionId
+            console.log("Auction created with ID:", auctionId);
+            console.log("Auction created successfully:", receipt);
+            // Save to MySQL via API call
+            return auctionId;
+        }
+        
+    } catch (error) {
+        console.error("Error creating auction:", error);
+    }
+};
+
+const listenForAuctionCreated = async (contract, callback) => {
+    contract.on("AuctionCreated", (auctionId, address, title) => {
+        callback(auctionId, address, title);
+    });
+};
+
+const placeBid = async (contract, auctionId, bidAmount) => {
+    try {
+        
+        const tx = await contract.placeBid(auctionId, {
+            value: ethers.utils.parseEther(bidAmount), 
+          });
+
+        const receipt = await tx.wait();
+        console.log("Bid placed successfully:", receipt);
+    } catch (error) {
+        console.error("Error placing bid:", error);
+    }
+}
+
+const listenForBidPlaced = async (contract) => {
+    contract.on("BidPlaced", (auctionId, address, value) => {
+        console.log("BidPlaced: ", auctionId, address, value);
+    });
+};
+
+
+
+export {connectWallet, connection, registerUser, listenForUserRegistration, isUserRegistered, createAuction, listenForAuctionCreated, placeBid, listenForBidPlaced};

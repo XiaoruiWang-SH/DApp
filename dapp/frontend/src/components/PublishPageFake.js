@@ -3,6 +3,7 @@ import "./PublishPageFakeStyle.css";
 import axios from 'axios';
 import { useNavigate } from "react-router-dom";
 import { AppContext,  AppProvider} from './Context';
+import {connectWallet, connection, registerUser, listenForUserRegistration, isUserRegistered, createAuction, listenForAuctionCreated} from '../contracts/interaction';
 
 export default function PublishPageFake() {
  
@@ -77,31 +78,49 @@ export default function PublishPageFake() {
     }
 
     event.preventDefault();
+
     const currentDate = new Date();
     const formattedCurrentDate = formatDate(currentDate);
 
     const endDateTime = new Date(`${enddate}T${endtime}`);
     const formattedEndDateTime = formatDate(endDateTime);
-
-    const formData = {
-      address,
-      title,
-      pictureurl,
-      description,
-      startingBid,
-      formattedCurrentDate,
-      formattedEndDateTime,
-    };
-    console.log("Form Submitted:", formData);
+    
+    // const createAuction = async (contract, title, startingPrice, reservePrice, startDate, endDate) 
     try {
-    const response = await axios.post("/publish", formData, {
-        headers: {
-            'Content-Type': 'application/json',
-        },
-    });
-    console.log("publish Response:", response.data);
+      const auctionContract = await connection();
+      const auctionId = await createAuction(auctionContract, title, startingBid, startingBid, formattedCurrentDate, formattedEndDateTime);
+      const auctionid = auctionId.toString();
+      const formData = {
+        auctionid,
+        address,
+        title,
+        pictureurl,
+        description,
+        startingBid,
+        formattedCurrentDate,
+        formattedEndDateTime,
+      };
+      console.log("Form Submitted:", formData);
+      try {
+      const response = await axios.post("/publish", formData, {
+          headers: {
+              'Content-Type': 'application/json',
+          },
+      });
+      console.log("publish Response:", response.data);
+      } catch (error) {
+          console.error("Error handleSubmit:", error);
+      }
+
+
+      await listenForAuctionCreated(auctionContract, async (auctionId_callback, address, title) => {
+            console.log("AuctionCreated in publish page: ", auctionId_callback.toString(), address, title);
+            // const auctionid = auctionId.toString();
+
+            
+        });
     } catch (error) {
-        console.error("Error handleSubmit:", error);
+        console.error("Error creating auction:", error);
     }
     alert(`Publish Successful: ${title}`);
     navigate("/");

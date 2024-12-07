@@ -39,19 +39,6 @@ const upload = multer({ storage });
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// CREATE TABLE IF NOT EXISTS auctionItems (
-//     id INT AUTO_INCREMENT PRIMARY KEY,        -- Unique identifier for each item
-//     Title VARCHAR(255) NOT NULL,              -- Title of the item
-//     Des TEXT,                                 -- Description of the item
-//     CurrentHighest INT DEFAULT 0,  -- Current highest bid (e.g., money)
-//     Total INT DEFAULT 0,                      -- Total bids or count
-//     StartTime DATETIME NOT NULL,              -- Auction start time
-//     EndTime DATETIME NOT NULL,                -- Auction end time
-//     Status INT DEFAULT 0,                     -- Status of the item
-//     Publisher VARCHAR(255) NOT NULL,          -- Publisher's name or ID
-//     Owner VARCHAR(255) NOT NULL,              -- Owner's name or ID
-//     Favorites INT DEFAULT 0                   -- Total favorites or likes
-// );
 
 // Get the current datetime
 const currentDate = new Date();
@@ -138,7 +125,9 @@ app.get("/mypublish", async (req, res) => {
   res.json(auctionitem);
 });
 
+  
   // const formData = {
+  //   auctionId,
   //   address,
   //   title,
   //   pictureurl,
@@ -147,16 +136,16 @@ app.get("/mypublish", async (req, res) => {
   //   formattedCurrentDate,
   //   formattedEndDateTime,
   // };
-  // const addItem = async (title, des, imgurl, startBid, currentHighest, total, startTime, endTime, status, publisher, owner, favorites)
 
 app.post("/publish", async (req, res) => {
-    const { address, title, pictureurl, description, startingBid, formattedCurrentDate, formattedEndDateTime } = req.body;
+    const { auctionid, address, title, pictureurl, description, startingBid, formattedCurrentDate, formattedEndDateTime } = req.body;
   
-    console.log("Received data:", { address, title, pictureurl, description, startingBid, formattedCurrentDate, formattedEndDateTime });
+    console.log("Received data:", {auctionid, address, title, pictureurl, description, startingBid, formattedCurrentDate, formattedEndDateTime });
 
     try {
         // Add an item
         const newItemId = await addItem(
+          auctionid,
             title,
             description, 
             pictureurl, 

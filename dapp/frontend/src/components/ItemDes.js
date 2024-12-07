@@ -3,6 +3,7 @@ import './ItemDesStyle.css';
 import { useState } from 'react';
 import { useLocation } from "react-router-dom";
 import axios from 'axios';
+import {connectWallet, connection, placeBid, listenForBidPlaced} from '../contracts/interaction';
 
 export default function ItemDes() {
     const location = useLocation();
@@ -20,9 +21,14 @@ export default function ItemDes() {
     const handleChange = (event) => {
         setBidAmount(event.target.value);
     };
-    const handleConfirm = () => {
+    const handleConfirm = async() => {
         alert(`Bid confirmed: CHF ${bidAmount}`);
         setBidclick(false);
+
+        const auctionContract = await connection();
+        await listenForBidPlaced(auctionContract);
+        await placeBid(auctionContract, id, bidAmount);
+
       };
 
 
