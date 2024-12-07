@@ -5,6 +5,8 @@ import { useState, useEffect, useContext } from 'react';
 import { useNavigate } from "react-router-dom";
 import axios from 'axios';
 import { AppContext,  AppProvider} from './Context';
+import item_soldout from '../res/item_soldout.png';
+import item_InProcessing from '../res/item_InProcessing.png';
 
 export default function MySold() {
     const [goodsItems, setGoodsItems] = useState([]);
@@ -59,6 +61,8 @@ export default function MySold() {
                         highestBid={goodsItem.CurrentHighest}
                         totalBids={goodsItem.Total}
                         endTime={goodsItem.EndTime}
+                        stamp={goodsItem.Status == 0 ? item_InProcessing : item_soldout} 
+                        stampHidden={false}
                         onClick={() => handleItemClick(goodsItem)}
                     />
                 ))

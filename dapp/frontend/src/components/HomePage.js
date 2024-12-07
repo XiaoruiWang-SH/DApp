@@ -55,6 +55,7 @@ export default function HomePage() {
                         highestBid={goodsItem.CurrentHighest}
                         totalBids={goodsItem.Total}
                         endTime={goodsItem.EndTime}
+                        stampHidden={true}
                         onClick={() => handleItemClick(goodsItem)}
                     />
                 ))

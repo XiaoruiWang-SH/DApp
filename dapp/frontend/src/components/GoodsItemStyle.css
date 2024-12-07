@@ -1,7 +1,7 @@
 /* General Card Styles */
 .card {
     width: 240px;
-    height: 400px;
+    height: 380px;
     background-color: white;
     border: 1px solid #ddd;
     border-radius: 10px;
@@ -22,6 +22,15 @@
     object-fit: cover;
     border-bottom: 1px solid #ddd;
   }
+
+  .card-stamp {
+    position: absolute; /* Position relative to the card */
+    top: 0;          /* Align it to the bottom of the card */
+    right: 0;            /* Align it to the left of the card */
+    height: 100px;       /* Define the height */
+    object-fit: cover;  /* Ensure the image covers the defined area */
+    z-index: 1;         /* Ensure the image layers properly if needed */
+}
   
   /* Card Content */
   .card-content {
@@ -34,8 +43,10 @@
     margin: 0;
   }  
   .card-bid {
+    margin: 5px 0;
     display: flex;
     justify-content: space-between;
+    font-size: 0.6rem;
   }
   
   .left-text {
