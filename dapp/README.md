@@ -10,6 +10,8 @@ network, hence the smart contract
 - Metamask = wallet application and browser extension allowing you to 
 communicate with web3 websites and perform transactions. 
 
+===========================
+
 Before start you shoud make sure the environment is OK.
 1. install Node.js 
     choose the even version to install, namely Node.js LTS 
@@ -17,25 +19,41 @@ Before start you shoud make sure the environment is OK.
 2. Install the Metamask browser extension.
 
 ## Quick start
-First, install Hardhat locally:
+
+Install Hardhat local network(only once):
 
 ```sh
 npm install --save-dev hardhat
 ```
 
-Once installed, let's run Hardhat's testing network:
+Once installed, we can start this project by following these steps:
+
+Enter into dapp directory:
+
+Step 1: Start Hardhat local network:
 
 ```sh
-npx hardhat node
+npm run hardhat-node
 ```
 
-Then, on a new terminal, go to the repository's root folder and run this to
-deploy your contract:
+Step 2: Run deploy script:
 
 ```sh
-npx hardhat run scripts/deploy.js --network localhost
+npm run deploy-localhost
 ```
 
+Step 3: Start node server: 
+```sh
+npm run start-node
+```
+
+Step 4: Start frontend code: 
+
+```sh
+npm run start-frontend
+```
+
+===========================
 
 > Note: this example uses a custom deploy script, consider using `hardhat ignition` -
 > Hardhat builtin deployment system

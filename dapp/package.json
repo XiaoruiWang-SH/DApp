@@ -3,7 +3,11 @@
   "version": "1.0.0",
   "description": "A boilerplate repository to get you started with Hardhat and Ethereum development",
   "scripts": {
-    "test": "hardhat test"
+    "hardhat-test": "npx hardhat test",
+    "hardhat-node": "npx hardhat node",
+    "deploy-localhost": "npx hardhat run scripts/deploy.js --network localhost",
+    "start-node": "node node/src/server.js",
+    "start-frontend": "cd ./frontend && npm start"
   },
   "repository": {
     "type": "git",
