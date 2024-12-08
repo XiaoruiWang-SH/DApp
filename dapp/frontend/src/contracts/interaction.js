@@ -124,6 +124,8 @@ const listenForAuctionCreated = async (contract, callback) => {
     });
 };
 
+// event BidPlaced(uint256 auctionId, address bidder, uint256 amount);
+
 const placeBid = async (contract, auctionId, bidAmount) => {
     try {
         console.log("Placing bid on auction:", auctionId, "with amount:", bidAmount);
@@ -132,7 +134,18 @@ const placeBid = async (contract, auctionId, bidAmount) => {
           });
 
         const receipt = await tx.wait();
+        const event = receipt.events.find(e => e.event === "BidPlaced");
         console.log("Bid placed successfully:", receipt);
+        if (event) {
+            const bigNumber = ethers.BigNumber.from(event.args.auctionId);
+            const auctionid = bigNumber.toNumber();
+            const bidder = event.args.bidder.toString();
+            const amount = ethers.utils.formatEther(event.args.amount);
+            console.log("placeBid successfully - auctionId: ", auctionid, "winner: ", bidder, "amount: ", amount);
+            // Save to MySQL via API call
+            return [auctionid, bidder, amount];
+        } 
+        return [null, null, null];
     } catch (error) {
         console.error("Error placing bid:", error);
         alert(error.message);
@@ -219,14 +232,32 @@ const getBidCount = async (contract, auctionId) => {
 //  }
 // }
 
+// event AuctionEnded(uint256 auctionId, address winner, uint256 amount);
+
 const endAuction = async (contract, auctionId) => {
     try {
         console.log("Ending auction:", auctionId);
         const tx = await contract.endAuction(auctionId);
         const receipt = await tx.wait();
         console.log("Auction ended successfully:", receipt);
+
+        // Wait for the transaction to be mined
+        const event = receipt.events.find(e => e.event === "AuctionEnded");
+
+        if (event) {
+            const bigNumber = ethers.BigNumber.from(event.args.auctionId);
+            const auctionid = bigNumber.toNumber();
+            const winner = event.args.winner.toString();
+            const amount = ethers.utils.formatEther(event.args.amount);
+            console.log("Auction created successfully - auctionId: ", auctionid, "winner: ", winner, "amount: ", amount);
+            // Save to MySQL via API call
+            return [auctionid, winner, amount];
+        } 
+        return [null, null, null];
+
     } catch (error) {
         console.error("Error ending auction:", error);
+        return [null, null, null];
     }
 };
 

@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import './ItemDesStyle.css';
-import { useState, useContext } from 'react';
+import { useState, useContext, useRef } from 'react';
 import { useLocation } from "react-router-dom";
 import axios from 'axios';
 import { AppContext,  AppProvider} from './Context';
@@ -8,6 +8,7 @@ import {connectWallet, connection, placeBid, listenForBidPlaced, getAuctionHighe
     getBidHistory, getBidCount, endAuction} from '../contracts/interaction';
 
 export default function ItemDes() {
+    const hasRun = useRef(false);
     const location = useLocation();
     const {id, isTimeEnd} = location.state || {};
     const [bidclick, setBidclick] = useState(false);
@@ -34,8 +35,8 @@ export default function ItemDes() {
 
         const auctionContract = await connection();
         await listenForBidPlaced(auctionContract);
-        await placeBid(auctionContract, item.AuctionId, bidAmount);
-
+        const [auctionid, bidder, amount] = await placeBid(auctionContract, item.AuctionId, bidAmount);
+        await updateItemByBid(id, bidder, amount);
         
         setTimeout(() => {
             window.location.reload(); // Reload the page
@@ -47,6 +48,7 @@ export default function ItemDes() {
     const [item, setItem] = useState({});
 
     useEffect(() => {
+        if (hasRun.current) return;
         console.log(" Requerst data for itemID: " + id);
 
         axios.get('/item', {
@@ -80,15 +82,27 @@ export default function ItemDes() {
                     }
                 })();
 
-                if (isTimeEnd) { // TODO: check if the auction is ended
-                    console.log("Auction ended");
-                    (
-                        async () => {
-                            const auctionContract = await connection();
-                            await endAuction(auctionContract, response.data.AuctionId);
-                        }
-                    )();
+                if (!isTimeEnd) {
+                    return;
                 }
+
+                if (isTimeEnd && response.data.Status == 1) { 
+                    console.log("Smart Contract has ended Auction already");
+                    return;
+                }
+
+                console.log("Trigger Smart Contract to end Auction");
+                (
+                    async () => {
+                        const auctionContract = await connection();
+                        const [auctionid, winner, amount] = await endAuction(auctionContract, response.data.AuctionId);
+                        if(auctionid == response.data.AuctionId){
+                            console.log("Auction ended successfully, ended auction ID: ", auctionid);
+                            await updateItem(id, winner, amount);
+                        }
+                    }
+                )();
+                
 
             })
             .catch((error) => {
@@ -99,15 +113,41 @@ export default function ItemDes() {
                     console.log("Error:", error.message);
                   }
             });
+            hasRun.current = true;
         
     }, [setItem]);
 
-    // const bidHistory = [
-    //     { "date": "2024-11-30 14:35", "price": "CHF 9600" },
-    //     { "date": "2024-11-30 14:20", "price": "CHF 9400" },
-    //     { "date": "2024-11-30 14:05", "price": "CHF 9300" },
-    //     { "date": "2024-11-30 13:50", "price": "CHF 9200" }
-    // ];
+    const updateItem = async (itemId, winner, amount) => {
+        try {
+            console.log("Update item:", itemId, winner, amount);
+            const response = await axios.post('/updateitem', {
+                itemId: itemId,
+                winner: winner,
+                amount: amount,
+            });
+            console.log("Update item response:", response.data);
+            return response.data;
+        } catch (error) {
+            console.error("Error updating item:", error);
+            return {};
+        }
+    }
+
+    const updateItemByBid = async (itemId, bidder, amount) => {
+        try {
+            console.log("Update item by bidder:", itemId, bidder, amount);
+            const response = await axios.post('/updateitembybid', {
+                itemId: itemId,
+                bidder: bidder,
+                amount: amount,
+            });
+            console.log("Update item by bidder response:", response.data);
+            return response.data;
+        } catch (error) {
+            console.error("Error updating item:", error);
+            return {};
+        }
+    }
 
     const bidNormal = () => {
         return (

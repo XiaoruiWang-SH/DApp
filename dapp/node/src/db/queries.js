@@ -37,10 +37,36 @@ const getItemById = async (id) => {
   const getItemsMybought = async (owner) => {
     try {
       // Parameterized query to fetch the item by id
-      const [rows] = await pool.query("SELECT * FROM auctionItems3 WHERE Owner = ? & Status = 1", [owner]);
+      const [rows] = await pool.query("SELECT * FROM auctionItems3 WHERE Owner = ?", [owner]);
       return rows; // Return the first matching row (or undefined if not found)
     } catch (err) {
       console.error("Error fetching item by id:", err);
+      throw err;
+    }
+  };
+
+  const updateItem = async (id, winner, amount) => {
+    try {
+      const [result] = await pool.query(
+        "UPDATE auctionItems3 SET Status = 1, Owner = ?, CurrentHighest = ? WHERE id = ?",
+        [winner, amount, id]
+      );
+      return result.affectedRows;
+    } catch (err) {
+      console.error("Error updating item:", err);
+      throw err;
+    }
+  };
+
+  const updateItemByBid = async (id, bidder, amount) => {
+    try {
+      const [result] = await pool.query(
+        "UPDATE auctionItems3 SET Total = Total + 1, CurrentHighest = ? WHERE id = ?",
+        [amount, id]
+      );
+      return result.affectedRows;
+    } catch (err) {
+      console.error("Error updating item:", err);
       throw err;
     }
   };
@@ -60,5 +86,5 @@ const addItem = async (auctionid, title, des, imgurl, startBid, currentHighest, 
   }
 };
 
-module.exports = { getItems, getItemById, getItemsMypublish, getItemsMybought, addItem };
+module.exports = { getItems, getItemById, getItemsMypublish, getItemsMybought, updateItem, updateItemByBid, addItem };
 

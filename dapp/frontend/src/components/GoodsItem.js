@@ -2,9 +2,7 @@ import React from 'react';
 import './GoodsItemStyle.css';
 import end_icon from '../res/end_icon.png';
 
-export default function GoodsItem({ title, image, startBid, highestBid, totalBids, endTime, onClick, stamp, stampHidden, timeEnd }) {
-    // console.log("highestBid:" + highestBid);
-    // console.log("totalBids:" + totoalBids);
+export default function GoodsItem({ title, image, startBid, highestBid, totalBids, endTime, onClick, timeEnd }) {
   return (
     <div className="card" onClick={onClick}>
       <img src={image} alt={title} className="card-image" />
@@ -27,9 +25,6 @@ export default function GoodsItem({ title, image, startBid, highestBid, totalBid
         <div className="card-bid">
             <text className='left-text'>End Time: </text>
             <text className='right-text'>{endTime}</text>
-        </div>
-        <div>
-          <img src={stamp} alt="Icon" className="card-stamp" hidden={stampHidden}/>
         </div>
         <div>
           <img src={end_icon} alt="Icon" className="card-end" hidden={!timeEnd}/>

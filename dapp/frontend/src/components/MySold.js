@@ -45,7 +45,8 @@ export default function MySold() {
     const navigate = useNavigate();
 
     const handleItemClick = (item) => {
-        navigate("/itemDes", { state: { id: item.id } });
+        const timeEnd = new Date(item.EndTime) > new Date() ? false : true
+        navigate("/itemDes", { state: { id: item.id, isTimeEnd: timeEnd } });
         console.log("Item clicked:", item.id);
     };
 
@@ -63,6 +64,7 @@ export default function MySold() {
                         endTime={goodsItem.EndTime}
                         stamp={goodsItem.Status == 0 ? item_InProcessing : item_soldout} 
                         stampHidden={false}
+                        timeEnd={new Date(goodsItem.EndTime) > new Date() ? false : true}
                         onClick={() => handleItemClick(goodsItem)}
                     />
                 ))

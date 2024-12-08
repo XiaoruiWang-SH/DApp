@@ -3,7 +3,7 @@ const cors = require("cors");
 const multer = require("multer");
 const path = require("path");
 
-const { getItems, getItemById, addItem, getItemsMypublish, getItemsMybought } = require("./db/queries");
+const { getItems, getItemById, addItem, getItemsMypublish, getItemsMybought, updateItem, updateItemByBid } = require("./db/queries");
 
 const app = express();
 
@@ -43,31 +43,6 @@ app.use(express.urlencoded({ extended: true }));
 // Get the current datetime
 const currentDate = new Date();
 const formattedDate = currentDate.toISOString().slice(0, 19).replace("T", " ");
-
-// (async () => {
-//     try {
-//       // Add an item
-//       const newItemId = await addItem(
-//         "Vintage Lamp",
-//         "A beautiful vintage lamp from the 1950s.",
-//         50,
-//         10,
-//         currentDate,
-//         currentDate,
-//         1,
-//         "JohnDoe",
-//         "JaneDoe",
-//         5
-//       );
-//       console.log("New Item ID:", newItemId);
-  
-//       // Fetch all items
-//       const items = await getItems();
-//       console.log("All Items:", items);
-//     } catch (err) {
-//       console.error("Error:", err);
-//     }
-//   })();
 
 // Endpoint to handle image uploads
 app.post("/uploads", upload.single("image"), (req, res) => {
@@ -122,6 +97,33 @@ app.get("/mypublish", async (req, res) => {
       console.error("Error:", error);
   }
   console.log("Item Description:", auctionitem);
+  res.json(auctionitem.reverse());
+});
+
+
+app.post("/updateitem", async (req, res) => {
+  const { itemId, winner, amount } = req.body;
+  console.log("updateItem: Request Details - itemid:" + itemId + " winner:" + winner + " amount:" + amount);
+  let auctionitem = {};
+  try {
+      auctionitem = await updateItem(itemId, winner, amount);
+  } catch (error) {
+      console.error("Error:", error);
+  }
+  console.log("Item Description:", auctionitem);
+  res.json(auctionitem);
+});
+
+app.post("/updateitembybid", async (req, res) => {
+  const { itemId, bidder, amount } = req.body;
+  console.log("updateitembybid: Request Details - itemid:" + itemId + " bidder:" + bidder + " amount:" + amount);
+  let auctionitem = {};
+  try {
+      auctionitem = await updateItemByBid(itemId, bidder, amount);
+  } catch (error) {
+      console.error("Error:", error);
+  }
+  console.log("Item Description:", auctionitem);
   res.json(auctionitem);
 });
 
@@ -162,8 +164,8 @@ app.post("/publish", async (req, res) => {
         console.log("New Item ID:", newItemId);
     
         // Fetch all items
-        const items = await getItems();
-        console.log("All Items:", items);
+        // const items = await getItems();
+        // console.log("All Items:", items);
       } catch (err) {
         console.error("Error:", err);
       }
@@ -173,6 +175,19 @@ app.post("/publish", async (req, res) => {
       message: "Item created successfully",
       data: { title, description },
     });
+  });
+
+  app.get("/mybought", async (req, res) => {
+    const { address } = req.query;
+    console.log("Request Details - address:" + address);
+    let auctionitems = [];
+    try {
+        auctionitems = await getItemsMybought(address);
+    } catch (error) {
+        console.error("Error:", error);
+    }
+    console.log("Item Description:", auctionitems);
+    res.json(auctionitems.reverse());
   });
 
 // 404 Error Handling

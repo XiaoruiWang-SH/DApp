@@ -30,7 +30,7 @@
     right: 0;            /* Align it to the left of the card */
     height: 100px;       /* Define the height */
     object-fit: cover;  /* Ensure the image covers the defined area */
-    z-index: 1;         /* Ensure the image layers properly if needed */
+    z-index: 2;         /* Ensure the image layers properly if needed */
 }
 
 .card-end {
