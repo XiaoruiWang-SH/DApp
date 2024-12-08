@@ -4,12 +4,16 @@ import { useState, useContext } from 'react';
 import { useLocation } from "react-router-dom";
 import axios from 'axios';
 import { AppContext,  AppProvider} from './Context';
-import {connectWallet, connection, placeBid, listenForBidPlaced, getAuctionHighest, getBidHistory, endAuction} from '../contracts/interaction';
+import {connectWallet, connection, placeBid, listenForBidPlaced, getAuctionHighest, 
+    getBidHistory, getBidCount, endAuction} from '../contracts/interaction';
 
 export default function ItemDes() {
     const location = useLocation();
     const {id, isTimeEnd} = location.state || {};
     const [bidclick, setBidclick] = useState(false);
+    const [bidhistory, setBidhistory] = useState([]);
+    const [bidcount, setBidcount] = useState(0);
+
     const { login, setLogin, address, setAddress} = useContext(AppContext);
 
 
@@ -31,6 +35,11 @@ export default function ItemDes() {
         const auctionContract = await connection();
         await listenForBidPlaced(auctionContract);
         await placeBid(auctionContract, item.AuctionId, bidAmount);
+
+        
+        setTimeout(() => {
+            window.location.reload(); // Reload the page
+          }, 1000); 
 
       };
 
@@ -60,16 +69,23 @@ export default function ItemDes() {
                     console.log("Highest bid: ", highest);
                     setHighestbid(highest);
 
-                    const history = await getBidHistory(auctionContract, response.data.AuctionId, address);
-                    console.log("Bid history: ", history);
+                    const count = await getBidCount(auctionContract, response.data.AuctionId);
+                    setBidcount(count);
+                    console.log("Bid count: ", count);
+                    if (count > 0) {
+                        const history = await getBidHistory(auctionContract, response.data.AuctionId);
+                        console.log("Bid history: ", history);
+                        history.reverse();
+                        setBidhistory(history);
+                    }
                 })();
 
                 if (isTimeEnd) { // TODO: check if the auction is ended
+                    console.log("Auction ended");
                     (
                         async () => {
                             const auctionContract = await connection();
-                            const highest = await endAuction(auctionContract, item.AuctionId);
-                            // setHighestbid(highest);
+                            await endAuction(auctionContract, response.data.AuctionId);
                         }
                     )();
                 }
@@ -86,17 +102,17 @@ export default function ItemDes() {
         
     }, [setItem]);
 
-    const bidHistory = [
-        { "date": "2024-11-30 14:35", "price": "CHF 9600" },
-        { "date": "2024-11-30 14:20", "price": "CHF 9400" },
-        { "date": "2024-11-30 14:05", "price": "CHF 9300" },
-        { "date": "2024-11-30 13:50", "price": "CHF 9200" }
-    ];
+    // const bidHistory = [
+    //     { "date": "2024-11-30 14:35", "price": "CHF 9600" },
+    //     { "date": "2024-11-30 14:20", "price": "CHF 9400" },
+    //     { "date": "2024-11-30 14:05", "price": "CHF 9300" },
+    //     { "date": "2024-11-30 13:50", "price": "CHF 9200" }
+    // ];
 
     const bidNormal = () => {
         return (
             <div className="bid-container">
-                <button className="item-button" onClick={bidItemClick}>
+                <button className="item-button" disabled={isTimeEnd} onClick={bidItemClick}>
                     Bid
                 </button>
             </div>
@@ -128,30 +144,39 @@ export default function ItemDes() {
 
       const BidHistory = ({ historyList }) => {
         // Check if historyList is undefined or empty
+        // history.push({bidderV, amountV, timestampV});
         if (!Array.isArray(historyList) || historyList.length === 0) {
             return <p>No bid history available.</p>;
         }
 
         return (
             <div>
-            <text>Bid History</text>
+            <text className="bid-history-title">Bid History</text>
             <div className="bid-history-container">
+            {bidcount > 0 ? 
             <table className="bid-history-table">
                 <thead>
                 <tr>
-                    <th>Date</th>
-                    <th>Bid Price</th>
+                    <th>Date & Time</th>
+                    <th>Bid Amount</th>
+                    <th>Bidder</th>
                 </tr>
                 </thead>
                 <tbody>
                 {historyList.map((bid, index) => (
                     <tr key={index}>
-                    <td>{bid.date}</td>
-                    <td>{bid.price}</td>
+                    <td>{bid.timestampV}</td>
+                    <td>{bid.amountV}</td>
+                    <td>{bid.bidderV}</td>
                     </tr>
                 ))}
                 </tbody>
             </table>
+            :
+             <div className="bid-history-nobid">
+                <text> No bid yet </text>
+            </div>
+            }
             </div>
             </div>
           );
@@ -184,7 +209,7 @@ export default function ItemDes() {
                 <div  className="acutionItem">
                     {/* total bid */}
                     <text>Total Bid </text>
-                    <text>{item.Total} </text>
+                    <text>{bidcount} </text>
                 </div>
                 <div className="acutionItem">
                     {/* end time */}
@@ -195,7 +220,7 @@ export default function ItemDes() {
             <hr/>
             <div className="bidArea">
                 {/* bid area */}
-                <BidHistory historyList={bidHistory} />
+                <BidHistory historyList={bidhistory} />
                 {bidclick ? bidClicked() : bidNormal()}
                 <div>
                     {/* history */}

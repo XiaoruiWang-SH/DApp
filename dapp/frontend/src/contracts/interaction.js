@@ -2,6 +2,17 @@ import { ethers } from "ethers";
 import CONTRACT_ADDRESS from "./auction-contract-address.json";
 import CONTRACT_ABI from "./Auction.json";
 
+const formatDate = (date) => {
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, "0"); // Months are 0-based
+    const day = String(date.getDate()).padStart(2, "0");
+    const hours = String(date.getHours()).padStart(2, "0");
+    const minutes = String(date.getMinutes()).padStart(2, "0");
+    const seconds = String(date.getSeconds()).padStart(2, "0");
+  
+    return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+  };
+
 const connectWallet = async () => {
     if (!window.ethereum) {
         alert("MetaMask is required!");
@@ -148,13 +159,21 @@ const getAuctionHighest = async (contract, auctionId) => {
 };
 
 
-// mapping(uint256 => mapping(address => uint256)) public bids;   // Records bids for each auction by bidder address.
-// // bids[auctionId][Bob] = 2 ether
-
-const getBidHistory = async (contract, auctionId, address) => {
+const getBidHistory = async (contract, auctionId) => {
     try {
-        const history = await contract.bids(auctionId, address);
-        console.log(`Bid history for (${auctionId}):`, history);
+        const [bidders, amounts, timestamps] = await contract.getBidHistory(auctionId);
+        console.log(`Bidders: Bid history for (${auctionId}):`, bidders);
+        console.log(`Amounts: Bid history for (${auctionId}):`, amounts);
+        console.log(`Timestamps: Bid history for (${auctionId}):`, timestamps);
+
+        let history = [];
+        const length = bidders.length;
+        for (let i = 0; i < length; i++) {
+            const bidderV = bidders[i];
+            const amountV = ethers.utils.formatEther(amounts[i]);
+            const timestampV = formatDate(new Date(timestamps[i].toNumber() * 1000));
+            history.push({bidderV, amountV, timestampV});
+        }
         return history;
     } catch (error) {
         console.error("Error checking user registration:", error);
@@ -162,8 +181,20 @@ const getBidHistory = async (contract, auctionId, address) => {
     }
 };
 
+const getBidCount = async (contract, auctionId) => {
+    try {
+        const bidCount = await contract.getBidCount(auctionId);
+        console.log(`Bid count for (${auctionId}):`, bidCount);
+        const bigNumber = ethers.BigNumber.from(bidCount);
+        const intValue = bigNumber.toNumber();
+        return intValue;
+    } catch (error) {
+        console.error("Error checking user registration:", error);
+        return [];
+    }
+};
 
-//  // End Auction
+ // End Auction
 //  function endAuction(uint256 _auctionId) external 
 //  auctionExists(_auctionId) 
 // {
@@ -200,4 +231,5 @@ const endAuction = async (contract, auctionId) => {
 };
 
 export {connectWallet, connection, registerUser, listenForUserRegistration, isUserRegistered, 
-    createAuction, listenForAuctionCreated, placeBid, listenForBidPlaced, getAuctionHighest, getBidHistory, endAuction};
+    createAuction, listenForAuctionCreated, placeBid, listenForBidPlaced, getAuctionHighest, 
+    getBidHistory, getBidCount, endAuction};

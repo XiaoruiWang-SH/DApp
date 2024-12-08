@@ -16,22 +16,27 @@ contract Auction {
         bool ended;
     } // Represents each auction with its details.
 
+    struct Bid {
+        address bidder;
+        uint256 amount;
+        uint256 timestamp;
+    } // used to record bids history for each auction
+
     // State variables
-    mapping(uint256 => AuctionItem) public auctions; //Stores all auctions, mapped by their unique ID
-    mapping(address => bool) public registeredUsers; //
-    mapping(uint256 => mapping(address => uint256)) public bids;   // Records bids for each auction by bidder address.
+    mapping(uint256 => AuctionItem) public auctions; // Stores all auctions, mapped by their unique ID， call it will return the info of an auction
+    mapping(address => bool) public registeredUsers; // 
+    mapping(uint256 => mapping(address => uint256)) public bids;   // Records bids for each auction by bidder address, call it will return as followed
     // bids[auctionId][Bob] = 2 ether
+    mapping(uint256 => Bid[]) public bidHistory; // record specific auction bid history, call it will return the history of an auction     
     uint256 public auctionCounter; // Counter to assign unique IDs to auctions.
 
-    // Events
+    // Events--used for logging and interacting with frontend
     event UserRegistered(address user);
     event AuctionCreated(uint256 auctionId, address seller, string description);
     event BidPlaced(uint256 auctionId, address bidder, uint256 amount);
     event AuctionEnded(uint256 auctionId, address winner, uint256 amount);
     event RefundProcessed(address bidder, uint256 amount);
 
-    //  events are an essential feature that allows smart contracts to communicate with external applications or the Ethereum network. 
-    //  They act as a logging mechanism that stores data in the blockchain's transaction logs.
     
     // Modifiers
     modifier onlyRegistered() {
@@ -56,7 +61,7 @@ contract Auction {
         require(!registeredUsers[msg.sender], "User already registered");
         registeredUsers[msg.sender] = true;
         emit UserRegistered(msg.sender);
-    }
+    } 
 
     // Create Auction
     function createAuction(
@@ -111,6 +116,12 @@ contract Auction {
         auction.highestBid = msg.value;
         auction.highestBidder = msg.sender;
         bids[_auctionId][msg.sender] = msg.value;
+
+        bidHistory[_auctionId].push(Bid({
+            bidder: msg.sender,
+            amount: msg.value,
+            timestamp: block.timestamp
+        }));
 
         emit BidPlaced(_auctionId, msg.sender, msg.value);
     }
@@ -176,5 +187,32 @@ contract Auction {
         returns (uint256) 
     {
         return bids[_auctionId][_bidder];
+    }
+
+    function getBidHistory(uint256 _auctionId) external view 
+        auctionExists(_auctionId)
+        returns (address[] memory bidders, uint256[] memory amounts, uint256[] memory timestamps)
+    {
+        Bid[] storage history = bidHistory[_auctionId];
+        uint256 length = history.length;
+        
+        bidders = new address[](length);
+        amounts = new uint256[](length);
+        timestamps = new uint256[](length);
+        
+        for (uint256 i = 0; i < length; i++) {
+            bidders[i] = history[i].bidder;
+            amounts[i] = history[i].amount;
+            timestamps[i] = history[i].timestamp;
+        }
+        
+        return (bidders, amounts, timestamps);
+    }
+
+    function getBidCount(uint256 _auctionId) external view 
+        auctionExists(_auctionId)
+        returns (uint256)
+    {
+        return bidHistory[_auctionId].length;
     }
 }

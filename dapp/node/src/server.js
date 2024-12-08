@@ -95,7 +95,7 @@ app.get("/api", async (req, res) => {
     }
     
     console.log("Goods Items:", goodsItems);
-    res.json(goodsItems);
+    res.json(goodsItems.reverse());
 });
 
 app.get("/item", async (req, res) => {
