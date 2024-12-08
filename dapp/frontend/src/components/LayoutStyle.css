@@ -223,5 +223,25 @@ body, html {
     border-top: 1px solid #ddd; /* Custom border styling */
   }
 
+  .pagetitle {
+    font-size: 13px;
+    margin: 10px 0;
+    color: #515151;
+    text-align: left;
+  }
+  .pagetitle hr {
+    margin: 0; /* Remove margin */
+    padding: 5; /* Remove padding */
+    border: none; /* Optional: Remove default border if needed */
+    border-top: 0.5px solid #ddd; /* Custom border styling */
+    height: 0.5px;
+  }
+
+  .pagetitle-icon {
+    width: 15px;
+    height: 15px;
+    /* margin-right: 10px; */
+  }
+
   
   

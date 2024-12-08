@@ -7,13 +7,16 @@ const AppProvider = ({ children }) => {
   // Define multiple states or values
   const [login, setLogin] = useState(false);
   const [address, setAddress] = useState("");
+  const [pagetitle, setPagetitle] = useState("");
 
   // Bundle all states into one object
   const value = {
     login,
     setLogin,
     address,
-    setAddress
+    setAddress,
+    pagetitle,
+    setPagetitle,
   };
 
   return <AppContext.Provider value={value}>{children}</AppContext.Provider>;

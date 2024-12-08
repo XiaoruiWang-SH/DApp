@@ -1,13 +1,16 @@
 import React from "react";
 import "./HomepageStyle.css";
 import GoodsItem from './GoodsItem';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useContext } from 'react';
 import { useNavigate } from "react-router-dom";
 import axios from 'axios';
+import { AppContext,  AppProvider} from './Context';
 
 
 export default function HomePage() {
     const [goodsItems, setGoodsItems] = useState([]);
+    const { login, setLogin, address, setAddress, pagetitle, setPagetitle} = useContext(AppContext);
+    setPagetitle("Home Page");
 
     useEffect(() => {
         axios.interceptors.request.use((config) => {

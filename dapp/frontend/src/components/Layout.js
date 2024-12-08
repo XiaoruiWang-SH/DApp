@@ -8,11 +8,12 @@ import sold_icon from '../res/sold_icon.png';
 import balance_icon from '../res/balance_icon.png';
 import buy_icon from '../res/buy_icon.png';
 import logout_icon from '../res/logout_icon.png';
+import title_icon from '../res/title_icon.png';
 
 import { useNavigate, useLocation} from "react-router-dom";
 import { useState, useRef, useEffect } from 'react';
 
-import {connectWallet, connection, registerUser, listenForUserRegistration, isUserRegistered} from '../contracts/interaction';
+import {connectWallet, connection, registerUser, listenForUserRegistration, isUserRegistered, getBalance} from '../contracts/interaction';
 import { AppContext,  AppProvider} from './Context';
 
 
@@ -24,7 +25,7 @@ const Layout = () => {
     const menuRef = useRef(null); // Reference to the menu container
     const location = useLocation();
 
-    const { login, setLogin, address, setAddress} = useContext(AppContext);
+    const { login, setLogin, address, setAddress, pagetitle, setPagetitle} = useContext(AppContext);
 
 
     useEffect(() => {
@@ -139,9 +140,13 @@ const Layout = () => {
         closeMenu();
         console.log("soldClick");
     };
-    const balanceClick = () => {
-        closeMenu();
+    const balanceClick = async () => {
+       
         console.log("balanceClick");
+        const balance = await getBalance(address);
+        alert("Your balance is: " + balance);
+        closeMenu();
+
     };
 
     const Popup = () => {
@@ -240,10 +245,12 @@ const Layout = () => {
     const Content = () => {
         return (
         <>
-        {/* <div>
-            <h5>{location.pathname}</h5>
-            <hr />
-        </div> */}
+            <div className='pagetitle'>
+                <img className='pagetitle-icon' src={title_icon} alt="Icon" />
+                <text>{pagetitle}</text>
+                {/* <hr /> */}
+            </div>
+            
           <main className='main-section'>
             <Outlet /> {/* Dynamically replaced by route-specific content */}
           </main>

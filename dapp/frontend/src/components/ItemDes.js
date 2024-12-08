@@ -15,7 +15,8 @@ export default function ItemDes() {
     const [bidhistory, setBidhistory] = useState([]);
     const [bidcount, setBidcount] = useState(0);
 
-    const { login, setLogin, address, setAddress} = useContext(AppContext);
+    const { login, setLogin, address, setAddress, pagetitle, setPagetitle} = useContext(AppContext);
+    setPagetitle("Auction Item Details");
 
 
     const bidItemClick = () => {

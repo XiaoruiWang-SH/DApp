@@ -11,7 +11,8 @@ import item_InProcessing from '../res/item_InProcessing.png';
 export default function MyBought() {
 
     const [goodsItems, setGoodsItems] = useState([]);
-    const { login, setLogin, address, setAddress} = useContext(AppContext);
+    const { login, setLogin, address, setAddress, pagetitle, setPagetitle} = useContext(AppContext);
+    setPagetitle("My Bought");
 
     useEffect(() => {
         

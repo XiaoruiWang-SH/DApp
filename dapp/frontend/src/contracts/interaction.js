@@ -30,6 +30,19 @@ const connectWallet = async () => {
     }
 };
 
+const getBalance = async (address) => {
+    try {
+        const provider = new ethers.providers.Web3Provider(window.ethereum);
+        const balance = await provider.getBalance(address);
+        const balanceInEther = ethers.utils.formatEther(balance);
+        return balanceInEther;
+
+    } catch (error) {
+        console.error("Error connecting to wallet:", error);
+    }
+};
+
+
 const connection = async () => {
     try {
         const provider = new ethers.providers.Web3Provider(window.ethereum);
@@ -207,32 +220,6 @@ const getBidCount = async (contract, auctionId) => {
     }
 };
 
- // End Auction
-//  function endAuction(uint256 _auctionId) external 
-//  auctionExists(_auctionId) 
-// {
-//  AuctionItem storage auction = auctions[_auctionId];
-//  require(!auction.ended, "Auction already ended");
-//  require(block.timestamp >= auction.endTime || msg.sender == auction.seller, 
-//          "Auction still active");
-
-//  auction.ended = true;
-//  auction.active = false;
-
-//  if (auction.highestBid >= auction.reservePrice) {
-//      // Transfer funds to seller
-//      payable(auction.seller).transfer(auction.highestBid);
-//      emit AuctionEnded(_auctionId, auction.highestBidder, auction.highestBid);
-//  } else {
-//      // Refund highest bidder if reserve price not met
-//      if (auction.highestBidder != address(0)) {
-//          payable(auction.highestBidder).transfer(auction.highestBid);
-//          emit RefundProcessed(auction.highestBidder, auction.highestBid);
-//      }
-//  }
-// }
-
-// event AuctionEnded(uint256 auctionId, address winner, uint256 amount);
 
 const endAuction = async (contract, auctionId) => {
     try {
@@ -263,4 +250,4 @@ const endAuction = async (contract, auctionId) => {
 
 export {connectWallet, connection, registerUser, listenForUserRegistration, isUserRegistered, 
     createAuction, listenForAuctionCreated, placeBid, listenForBidPlaced, getAuctionHighest, 
-    getBidHistory, getBidCount, endAuction};
+    getBidHistory, getBidCount, endAuction, getBalance};

@@ -10,7 +10,8 @@ import item_InProcessing from '../res/item_InProcessing.png';
 
 export default function MySold() {
     const [goodsItems, setGoodsItems] = useState([]);
-    const { login, setLogin, address, setAddress} = useContext(AppContext);
+    const { login, setLogin, address, setAddress, pagetitle, setPagetitle} = useContext(AppContext);
+    setPagetitle("My Published");
 
     useEffect(() => {
         axios.interceptors.request.use((config) => {

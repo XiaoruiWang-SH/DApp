@@ -6,6 +6,9 @@ import { AppContext,  AppProvider} from './Context';
 import {connectWallet, connection, registerUser, listenForUserRegistration, isUserRegistered, createAuction, listenForAuctionCreated} from '../contracts/interaction';
 
 export default function PublishPageFake() {
+
+  const { login, setLogin, address, setAddress, pagetitle, setPagetitle} = useContext(AppContext);
+  setPagetitle("Publish an auction item");
  
   const [title, setTitle] = useState("");
   const [pictures, setPictures] = useState([]);
@@ -19,11 +22,11 @@ export default function PublishPageFake() {
 
   const navigate = useNavigate();
 
-  const { login, setLogin, address, setAddress} = useContext(AppContext);
 
   const handleImageUpload = async (event) => {
     console.log("Files:", event.target.files);
     console.log('access address:', address);
+    
     
 
     const img = event.target.files[0];
@@ -130,9 +133,9 @@ export default function PublishPageFake() {
 
   return (
     <div className="form-container">
-      <div className="form-title">
+      {/* <div className="form-title">
         <text>Publish an auction item</text>
-      </div>
+      </div> */}
       <form onSubmit={handleSubmit}>
         {/* Title */}
         <div className="form-group">
