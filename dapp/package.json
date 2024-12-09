@@ -6,8 +6,8 @@
     "hardhat-test": "npx hardhat test",
     "hardhat-node": "npx hardhat node",
     "deploy-localhost": "npx hardhat run scripts/deploy.js --network localhost",
-    "start-node": "node node/src/server.js",
-    "start-frontend": "cd ./frontend && npm start"
+    "start-node": "npm install --only=prod && node node/src/server.js",
+    "start-frontend": "cd ./frontend && npm install && npm start"
   },
   "repository": {
     "type": "git",

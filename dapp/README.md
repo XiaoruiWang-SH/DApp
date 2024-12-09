@@ -4,26 +4,46 @@ Auction system app built with React and etherjs using the smart contract on the
 Hardhat local network and node server interacting with mysql database. The app requires Metamask to run transactions. 
 
 
-## To run the Auction System on local, needing the environments prerequistes:
+## To run the Auction System on local, need the environments prerequistes:
 
 * Node.js
+    * install Node LTS (v22.12.0)
+    * if you have many versions of Node, using NVM to switch node version
+    * run "nvm install v22.12.0", then run "nvm use v22.12.0"
+
 * Mysql
+    * install mysql run:
+        ```sh
+        brew install mysql
+        ```
+    * Start the MySQL Service, run:
+        ```sh
+        brew services start mysql
+        ```
+    * Log in to MySQL, run:
+        ```sh
+        mysql -u root -p
+        ```
+    * Create a table named "auctiondb", run:
+        ```sh
+        CREATE DATABASE auctiondb;
+        ```
+    * Check is database is created successful, run:
+        ```sh
+        SHOW DATABASES;
+        ```
+
 * Hardhat local network
+    * Install Hardhat local network(only once):
+
+        ```sh
+        npm install --save-dev hardhat
+        ```
+
 * Metamask chrome browser extension
+    * Create a local hardhat network: http://127.0.0.1:8545
+    * Import test account
 
-
-<!-- - React = frontend
-- etherjs = backend and utility functions to connect the web app to the Ethereum
-network, hence the smart contract
-- Hardhat = framework for compiling, testing and deploying on a local network
-- Metamask = wallet application and browser extension allowing you to 
-communicate with web3 websites and perform transactions.  -->
-
-
-<!-- 1. install Node.js 
-    choose the even version to install, namely Node.js LTS 
-    If you install version of Node.js wrongly, use NVM to install a new one then swtich to Node.js LTS
-2. Install the Metamask browser extension. -->
 
 ## Quick start
 
