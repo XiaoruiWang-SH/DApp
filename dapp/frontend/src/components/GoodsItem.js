@@ -1,6 +1,6 @@
 import React from 'react';
 import './GoodsItemStyle.css';
-import sold_icon from '../res/sold_icon.png';
+import item_soldout from '../res/item_soldout.png';
 
 export default function GoodsItem({ title, image, startBid, highestBid, totalBids, endTime, onClick, timeEnd }) {
   return (
@@ -27,7 +27,7 @@ export default function GoodsItem({ title, image, startBid, highestBid, totalBid
             <text className='right-text'>{endTime}</text>
         </div>
         <div>
-          <img src={sold_icon} alt="Icon" className="card-end" hidden={!timeEnd}/>
+          <img src={item_soldout} alt="Icon" className="card-end" hidden={!timeEnd}/>
         </div>
       </div>
     </div>
