@@ -7,10 +7,10 @@ In D-Auction System website, you can browse all items that can be bided for all 
 
 If you have more interests in this item, you can click the card, then you enter into the item description page, on which you can see more information about this item, including all bids history and you also you can make a bid on this page. 
 
-There is also a publish page, on that you can publish items that you want to sold. It can be displayed in the "My Published" page which you can enter into by clicking the popup item in user center. And also you can check items you have bought by the way as same as checking your published items.
+There is also a publish page, on that you can publish items that you want to sell. It can be displayed in the "My Published" page which you can enter into by clicking the popup item in user center. And also you can check items you have bought by the way as same as checking your published items.
 
 ## Implementation
-For implementation of this project, we use many technologies. Generally, the project can split to two parts, on-chain part and off-chain part:
+For implementation of this project, we use many technologies. Generally, the project can be splited into two parts, on-chain part and off-chain part:
 * On-chain part:
     - Smart contract written by solidity
     - Delopy locally using Hardhat 
@@ -28,7 +28,7 @@ For implementation of this project, we use many technologies. Generally, the pro
     - Database
         - Local mysql database
 
-        
+
 
 ## Challenges and Solutions
 **1. Data Storage accross on-chain and off-chain**
