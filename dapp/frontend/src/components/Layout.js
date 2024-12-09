@@ -157,7 +157,7 @@ const Layout = () => {
                     <li onClick={myPublishClick}>
                         <div className='popup-menu-item'>
                             <img src={sold_icon} alt="Icon"/>
-                            <text>My Publish</text>
+                            <text>My Published</text>
                         </div>
                     </li>
                     <li onClick={buyClick}>
