@@ -41,14 +41,14 @@ So we decided that only information that related to transaction can be saved in 
 
 At the beginning, we just want to build a pure frontend website for auction system. But we find if we do in this way, we can't synchronization data for users, beause for a auction system we have to support publishing items, and all users can join in one auction activity. So, there must be a data synchronization mechanism to support these. 
 
-So, we built a node server and a mysql database as well. All auction items information saved in database though node server, frontend website is only responsible for ui display and making requests data from node server. In this way we soloved the data synchronization problem.
+So, we built a node server and a mysql database as well. All auction items information saved in database through node server, frontend website is only responsible for ui display and making data requests from node server. In this way we soloved the data synchronization problem.
 
 
 **3. Transfer currency on block chain**
 
 As we all know, in an auction system, the highest bidder wins. But for failed people they should get refound. But when and how to refound them, at the end time of auction? Yes, this way can be doable, but is not the best way. Because if we do in this way, we will handle maybe so many refound transaction at same time when acution is ended. This poses significant system risks and can lead to very high transaction peaks.
 
-So we dicide that biders get their refound as soon as when another bid appears, with this method, we have leveled out these transaction peaks withour system risks.
+So we dicide that biders get their refound as soon as when another higher bid appears, with this method, we have leveled out these transaction peaks without system risks.
 
 
  
