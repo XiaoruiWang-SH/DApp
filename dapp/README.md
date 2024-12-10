@@ -20,7 +20,7 @@ Hardhat local network and node server interacting with mysql database. The app r
         ```sh
         brew services start mysql
         ```
-    * Log in to MySQL, run:
+    <!-- * Log in to MySQL, run:
         ```sh
         mysql -u root -p
         ```
@@ -31,7 +31,7 @@ Hardhat local network and node server interacting with mysql database. The app r
     * Check is database is created successful, run:
         ```sh
         SHOW DATABASES;
-        ```
+        ``` -->
 
 * Hardhat local network
     * Install Hardhat local network(only once):

@@ -23,11 +23,14 @@ contract Auction {
     } // used to record bids history for each auction
 
     // State variables
-    mapping(uint256 => AuctionItem) public auctions; // Stores all auctions, mapped by their unique ID， call it will return the info of an auction
-    mapping(address => bool) public registeredUsers; // 
-    mapping(uint256 => mapping(address => uint256)) public bids;   // Records bids for each auction by bidder address, call it will return as followed
-    // bids[auctionId][Bob] = 2 ether
-    mapping(uint256 => Bid[]) public bidHistory; // record specific auction bid history, call it will return the history of an auction     
+    mapping(uint256 => AuctionItem) public auctions; // Stores all auctions, mapped by their unique ID，
+    // call it will return the info of an auction
+
+    mapping(address => bool) public registeredUsers; // checked if user is registered
+    mapping(uint256 => mapping(address => uint256)) public bids;   // Records bids for each auction by bidder address, 
+    //call it will return as followed: bids[auctionId][Bob] = 2 ether
+    mapping(uint256 => Bid[]) public bidHistory; // record specific auction bid history, 
+    // call it will return the history of an auction     
     uint256 public auctionCounter; // Counter to assign unique IDs to auctions.
 
     // Events--used for logging and interacting with frontend
@@ -38,7 +41,7 @@ contract Auction {
     event RefundProcessed(address bidder, uint256 amount);
 
     
-    // Modifiers
+    // Modifiers for access control
     modifier onlyRegistered() {
         require(registeredUsers[msg.sender], "User not registered");
         _;
@@ -57,13 +60,15 @@ contract Auction {
     }
 
     // User Registration
+    // registerUser(): register the caller(based on the user's address), 
+    // a user cannot double register.
     function registerUser() external {
         require(!registeredUsers[msg.sender], "User already registered");
         registeredUsers[msg.sender] = true;
         emit UserRegistered(msg.sender);
     } 
 
-    // Create Auction
+    // createAuction(input info of an item):  call it will generate an auction
     function createAuction(
         string memory _description,
         uint256 _startingPrice,
@@ -126,7 +131,10 @@ contract Auction {
         emit BidPlaced(_auctionId, msg.sender, msg.value);
     }
 
-    // End Auction
+    // endAuction(input id of an auction): can be access by any user 
+    // if input value _auctionId exists, but will only execute successfully only if :
+    // the caller is seller or the auction time of this item is over. 
+
     function endAuction(uint256 _auctionId) external 
         auctionExists(_auctionId) 
     {
@@ -152,6 +160,7 @@ contract Auction {
     }
 
     // View Functions
+    // input an Id of an auction and will output the info of it
     function getAuction(uint256 _auctionId) external view 
         auctionExists(_auctionId) 
         returns (
@@ -182,6 +191,8 @@ contract Auction {
         );
     }
 
+    // input an Id and and address of a bidder, it will output the bidder's price, 
+    // if a bidder bids this auction twice, it will output the latter time's bid price
     function getBidAmount(uint256 _auctionId, address _bidder) external view 
         auctionExists(_auctionId) 
         returns (uint256) 
@@ -189,6 +200,8 @@ contract Auction {
         return bids[_auctionId][_bidder];
     }
 
+    // input an Id of an auction
+    // it will output the bid info  of the bidder on this auction
     function getBidHistory(uint256 _auctionId) external view 
         auctionExists(_auctionId)
         returns (address[] memory bidders, uint256[] memory amounts, uint256[] memory timestamps)
@@ -209,6 +222,8 @@ contract Auction {
         return (bidders, amounts, timestamps);
     }
 
+    // getBidCount(input uint256 Id of an auction): 
+    // output how many times it has been bidded
     function getBidCount(uint256 _auctionId) external view 
         auctionExists(_auctionId)
         returns (uint256)
