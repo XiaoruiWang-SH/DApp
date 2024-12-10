@@ -6,7 +6,7 @@
     "hardhat-test": "npx hardhat test",
     "hardhat-node": "npx hardhat node",
     "deploy-localhost": "npx hardhat run scripts/deploy.js --network localhost",
-    "start-node": "npm install --only=prod && node node/src/server.js",
+    "start-node": "cd ./node && npm install && node src/server.js",
     "start-frontend": "cd ./frontend && npm install && npm start"
   },
   "repository": {
@@ -29,7 +29,7 @@
     "@nomiclabs/hardhat-etherscan": "^3.1.4",
     "chai": "^4.3.7",
     "ethers": "^5.7.2",
-    "hardhat": "^2.22.16",
+    "hardhat": "^2.22.17",
     "hardhat-gas-reporter": "^1.0.9",
     "solidity-coverage": "^0.8.2"
   }

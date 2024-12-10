@@ -1,4 +1,6 @@
 # D-Auction System
+Made by Group 8: Xiaorui Wang, Han Qin, Zitian Wang, Haoyu Yang, Xu Zhang, Tianyi Zhou
+
 ## App Theme
 D-Auction System is a decentralized auction web app, it uses block chain technolgy to protect business fairness, transparency and security. Anyone can register as a user and you will have right to publish auction items and bid auction items automatically, there is totally free for all.
 
@@ -35,11 +37,11 @@ For implementation of this project, we use many technologies. Generally, the pro
 
 For an auction system, we have a lot of information needed to save, e.g. Auciton items information needs to save like title, description, image, something related to bid, status, ect. And user information also need to save. So there is an issue that we can't save all information into on-chain, because it's cost is expensive. 
 
-So we decided that only information that related to transaction can be saved in on-chain, like bid amout, date, address from where to where, and users' rigisteration information is just a wallet address. Others information all saved in off-chain, we can only create a table saving the map item id in off-chain to the item id in on-chain. 
+So we decided that only information that related to transaction can be saved in on-chain, like bid amount, date, address from where to where, and users' rigistration information is just a wallet address. Others information all saved in off-chain, we can only create a table saving the map item id in off-chain to the item id in on-chain. 
 
 **2. Data Synchronization for all users**
 
-At the beginning, we just want to build a pure frontend website for auction system. But we find if we do in this way, we can't synchronization data for users, beause for a auction system we have to support publishing items, and all users can join in one auction activity. So, there must be a data synchronization mechanism to support these. 
+At the beginning, we just want to build a pure frontend website for auction system. But we find if we do in this way, we can't synchronize data for users, because for a auction system we have to support publishing items, and all users can join in one auction activity. So, there must be a data synchronization mechanism to support these. 
 
 So, we built a node server and a mysql database as well. All auction items information saved in database through node server, frontend website is only responsible for ui display and making data requests from node server. In this way we soloved the data synchronization problem.
 

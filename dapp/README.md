@@ -64,6 +64,11 @@ Step 1: Start Hardhat local network:
 ```sh
 npm run hardhat-node
 ```
+then run:
+
+```sh
+npm install --save-dev hardhat
+```
 
 Step 2: Run deploy script:
 
@@ -72,11 +77,19 @@ npm run deploy-localhost
 ```
 
 Step 3: Start node server: 
+
+before start node server, make sure start mysql servive first, if you have not do this, run:
+
+```sh
+brew services start mysql
+```
+then run this below instruction to start node server:
+
 ```sh
 npm run start-node
 ```
 
-Step 4: Start frontend code: 
+Step 4: open a new terminal to run command for Start frontend code: 
 
 ```sh
 npm run start-frontend
