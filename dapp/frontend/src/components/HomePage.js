@@ -47,6 +47,14 @@ export default function HomePage() {
         console.log("Item clicked:", item.id);
     };
 
+    const itemIsEnd = (item) => {
+        if (item.Status == 1) {
+            return true;
+        }
+        const timeEnd = new Date(item.EndTime) > new Date() ? false : true
+        return timeEnd;
+    };
+
     return (
         <div className='card-container'>
             {
@@ -59,7 +67,7 @@ export default function HomePage() {
                         highestBid={goodsItem.CurrentHighest}
                         totalBids={goodsItem.Total}
                         endTime={goodsItem.EndTime}
-                        timeEnd={new Date(goodsItem.EndTime) > new Date() ? false : true}
+                        timeEnd={itemIsEnd(goodsItem)}
                         onClick={() => handleItemClick(goodsItem)}
                     />
                 ))

@@ -1,9 +1,10 @@
 
-const pool = require("./config");
+const poolPromise = require("./config");
 
 // Fetch all items
 const getItems = async () => {
   try {
+    const pool = await poolPromise;
     const [rows] = await pool.query("SELECT * FROM auctionItems3"); // Corrected table name
     return rows;
   } catch (err) {
@@ -14,6 +15,7 @@ const getItems = async () => {
 
 const getItemById = async (id) => {
     try {
+      const pool = await poolPromise;
       // Parameterized query to fetch the item by id
       const [rows] = await pool.query("SELECT * FROM auctionItems3 WHERE id = ?", [id]);
       return rows[0]; // Return the first matching row (or undefined if not found)
@@ -25,6 +27,7 @@ const getItemById = async (id) => {
 
   const getItemsMypublish = async (publisher) => {
     try {
+      const pool = await poolPromise;
       // Parameterized query to fetch the item by id
       const [rows] = await pool.query("SELECT * FROM auctionItems3 WHERE Publisher = ?", [publisher]);
       return rows; // Return the first matching row (or undefined if not found)
@@ -36,6 +39,7 @@ const getItemById = async (id) => {
 
   const getItemsMybought = async (owner) => {
     try {
+      const pool = await poolPromise;
       // Parameterized query to fetch the item by id
       const [rows] = await pool.query("SELECT * FROM auctionItems3 WHERE Owner = ?", [owner]);
       return rows; // Return the first matching row (or undefined if not found)
@@ -47,6 +51,7 @@ const getItemById = async (id) => {
 
   const updateItem = async (id, winner, amount) => {
     try {
+      const pool = await poolPromise;
       const [result] = await pool.query(
         "UPDATE auctionItems3 SET Status = 1, Owner = ?, CurrentHighest = ? WHERE id = ?",
         [winner, amount, id]
@@ -60,6 +65,7 @@ const getItemById = async (id) => {
 
   const updateItemByBid = async (id, bidder, amount) => {
     try {
+      const pool = await poolPromise;
       const [result] = await pool.query(
         "UPDATE auctionItems3 SET Total = Total + 1, CurrentHighest = ? WHERE id = ?",
         [amount, id]
@@ -75,6 +81,7 @@ const getItemById = async (id) => {
 // Insert a new item
 const addItem = async (auctionid, title, des, imgurl, startBid, currentHighest, total, startTime, endTime, status, publisher, owner, favorites) => {
   try {
+    const pool = await poolPromise;
     const [result] = await pool.query(
       "INSERT INTO auctionItems3 (AuctionId, Title, Des, Imgurl, StartBid, CurrentHighest, Total, StartTime, EndTime, Status, Publisher, Owner, Favorites) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
       [auctionid, title, des, imgurl, startBid, currentHighest, total, startTime, endTime, status, publisher, owner, favorites]

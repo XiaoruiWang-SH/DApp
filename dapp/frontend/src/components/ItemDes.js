@@ -14,12 +14,34 @@ export default function ItemDes() {
     const [bidclick, setBidclick] = useState(false);
     const [bidhistory, setBidhistory] = useState([]);
     const [bidcount, setBidcount] = useState(0);
+    const [publisher, setPublisher] = useState("");
+    const [auctionId, setAuctionId] = useState(0);
+    const [isEnd, setIsEnd] = useState(false);
 
     const { login, setLogin, address, setAddress, pagetitle, setPagetitle} = useContext(AppContext);
     setPagetitle("Auction Item Details");
 
-
+   
     const bidItemClick = () => {
+        if (publisher == address && !isEnd) {            
+            console.log("Trigger actively Smart Contract to end Auction");
+            (
+                async () => {
+                    const auctionContract = await connection();
+                    const [auctionid, winner, amount] = await endAuction(auctionContract, auctionId);
+                    if(auctionid == auctionId){
+                        console.log("Auction ended successfully, ended auction ID: ", auctionid);
+                        setIsEnd(true);
+                        await updateItem(id, winner, amount);
+
+                        setTimeout(() => {
+                            window.location.reload(); // Reload the page
+                          }, 1000); 
+                    }
+                }
+            )();
+            return;
+        }
         console.log("bidItemClick");
         setBidclick(true);
     };
@@ -60,9 +82,12 @@ export default function ItemDes() {
                 'Content-Type': 'application/json',
             },
         }).then((response) => {
-                console.log(response.data);
+                console.log("response.data: ", response.data);
                 setItem(response.data);
                 setBidAmount(response.data.StartBid);
+                setPublisher(response.data.Publisher);
+                setAuctionId(response.data.AuctionId);
+                setIsEnd(response.data.Status == 1);
 
                 (async () => {
                     const auctionContract = await connection();
@@ -83,11 +108,11 @@ export default function ItemDes() {
                     }
                 })();
 
-                if (!isTimeEnd) {
+                if (!isEnd) {
                     return;
                 }
 
-                if (isTimeEnd && response.data.Status == 1) { 
+                if (isEnd && response.data.Status == 1) { 
                     console.log("Smart Contract has ended Auction already");
                     return;
                 }
@@ -153,8 +178,8 @@ export default function ItemDes() {
     const bidNormal = () => {
         return (
             <div className="bid-container">
-                <button className="item-button" disabled={isTimeEnd} onClick={bidItemClick}>
-                    Bid
+                <button className="item-button" disabled={isEnd} onClick={bidItemClick}>
+                    {publisher == address ? "End Auction" : "Bid"}
                 </button>
             </div>
         );

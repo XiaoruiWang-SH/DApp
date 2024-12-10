@@ -1,16 +1,15 @@
 const mysql = require("mysql2/promise");
 
-// Create a connection pool for better performance
-const pool = mysql.createPool({
+// Database configuration
+const config = {
   host: "localhost",    // MySQL server hostname
   user: "root",         // MySQL username
   password: "",         // MySQL password
-  database: "auctiondb",   // MySQL database name
-  waitForConnections: true,
-  connectionLimit: 10,
-  queueLimit: 0,
-  dateStrings: true,
-});
+  database: "auctiondb" // MySQL database name
+};
+
+// SQL query to create the database if it doesn't exist
+const createDatabaseQuery = `CREATE DATABASE IF NOT EXISTS ${config.database};`;
 
 // SQL query to create the table
 const createTableQuery = `
@@ -35,10 +34,32 @@ const createTableQuery = `
 // Function to ensure the table exists
 const initializeDatabase = async () => {
   try {
-    const connection = await pool.getConnection();
-    await connection.query(createTableQuery);
+    // Create a connection to MySQL server without specifying the database
+    const connection = await mysql.createConnection({
+      host: config.host,
+      user: config.user,
+      password: config.password
+    });
+    // Create the database if it doesn't exist
+    await connection.query(createDatabaseQuery);
+    console.log(`Database \`${config.database}\` created or already exists.`);
+    connection.end(); // Close this connection
+
+    // Create a connection pool for the specific database
+    const pool = mysql.createPool({
+      ...config,
+      waitForConnections: true,
+      connectionLimit: 10,
+      queueLimit: 0,
+      dateStrings: true
+    });
+
+    const connectionFromPool = await pool.getConnection();
+    await connectionFromPool.query(createTableQuery);
     console.log("Table `auctionItems3` created or already exists.");
-    connection.release(); // Release the connection back to the pool
+    connectionFromPool.release(); // Release the connection back to the pool
+
+    return pool;
   } catch (err) {
     console.error("Error creating table:", err);
     throw err;
@@ -46,7 +67,7 @@ const initializeDatabase = async () => {
 };
 
 // Initialize the database when the module is imported
-initializeDatabase();
+const poolPromise = initializeDatabase();
 
-module.exports = pool;
+module.exports = poolPromise;
 
