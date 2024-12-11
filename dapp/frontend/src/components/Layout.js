@@ -9,6 +9,7 @@ import balance_icon from '../res/balance_icon.png';
 import buy_icon from '../res/buy_icon.png';
 import logout_icon from '../res/logout_icon.png';
 import title_icon from '../res/title_icon.png';
+import logo from '../res/logo.png';
 
 import { useNavigate, useLocation} from "react-router-dom";
 import { useState, useRef, useEffect } from 'react';
@@ -220,7 +221,7 @@ const Layout = () => {
           <div className='header'>
             <div className='header-left'  onClick={homeIconClick}>
                 <div className='header-homeicon' >
-                    <img src={home_icon} alt="Icon" />
+                    <img src={logo} alt="Icon" />
                 </div>
                 <div className='header-title'>
                     <text>D-Auction System</text>
