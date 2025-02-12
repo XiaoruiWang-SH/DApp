@@ -68,15 +68,4 @@
 
 **others**: compiling / running artifacts
 
-## Tasks assignment:
-**Smart contract**: Haoyu Yang, Tianyi Zhou, Xu Zhang
-
-**Off-Chain code**: Xiaorui Wang, Han Qin, Zitian Wang
-
-## Development progress：
-
-## Development rules：
-1. 代码不要直接合并到main分支，应该合并到dev
-2. 可以从dev分支拉个自己的分支
-3. 先pull,本地解决完冲突，自己验证通过，再push到远程
 
