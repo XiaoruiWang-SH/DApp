@@ -1,71 +1,97 @@
-# DAPP
+# Auction System dapp with Hardhat, React, EthersJS, Node, Mysql
+
+Auction system app built with React and etherjs using the smart contract on the
+Hardhat local network and node server interacting with mysql database. The app requires Metamask to run transactions. 
 
 
-## APP theme：Auction System
-1. User Registration and Identity
-2. Auction Creation
-    Include details like:
-    * Item description.
-    * Starting price.
-    * Auction duration (start and end times).
-    * Reserve price (optional minimum acceptable price).
-3. Bidding  
-    * Place Bid:
-        * Allow users to submit bids higher than the current bid.
-    * Track Highest Bid:
-        * Ensure the highest bid is updated in real time.
-    * Refund Outbid Users:
-        * Automatically return funds (or placeholders) to bidders who were outbid.
-    * Bid History (Optional):
-        * Display a list of all bids for transparency.
-4. Auction Lifecycle Management
-    * Start Auction:
-        * Activate an auction at the specified start time.
-    * End Auction:
-        * Automatically or manually close the auction when the duration ends.
-        * Determine the winner (highest bidder).
-        * Handle unsold items if no bids meet the reserve price.
-5. Payments and Funds Management
-    * ~~Escrow System:~~
-        * ~~Lock the highest bid funds during the auction.~~
-        * ~~Hold funds until the auction is successfully completed.~~
-    * Transfer Funds:
-        * Release funds to the seller after the auction ends.
-    * Refund Mechanism:
-        * Refund all other bidders except the highest one.
-    * ~~Fees (Optional)~~:
-        * ~~Deduct platform or transaction fees if applicable~~.
+## To run the Auction System on local, need the environments prerequistes:
 
-## Prototype 
-![prototype](DApp.png)
+* Node.js
+    * install Node LTS (v22.12.0)
+    * if you have many versions of Node, using NVM to switch node version
+    * run "nvm install v22.12.0", then run "nvm use v22.12.0"
 
-## Development technologies
-**Smart contract**: 
-* development language: Solidity
-* test/depoly tool: hardhat
-* depoly environment: local network
-* interact tool: MetaMask
+* Mysql
+    * install mysql run:
+        ```sh
+        brew install mysql
+        ```
+    * Start the MySQL Service, run:
+        ```sh
+        brew services start mysql
+        ```
+    <!-- * Log in to MySQL, run:
+        ```sh
+        mysql -u root -p
+        ```
+    * Create a table named "auctiondb", run:
+        ```sh
+        CREATE DATABASE auctiondb;
+        ```
+    * Check is database is created successful, run:
+        ```sh
+        SHOW DATABASES;
+        ``` -->
 
-**Off-Chain code**:
-* frontend code: React
-* backend code: Node.js
-* database: MySQL
-* Connect to blockchain via web3.js, ethers.js, or similar tools.
-* wallet interaction (e.g., MetaMask, WalletConnect).
+* Hardhat local network
+    * Install Hardhat local network(only once):
 
-## Project structure
-**contracts**: smart contract code
+        ```sh
+        npm install --save-dev hardhat
+        ```
 
-**frontend**：frontend code
+* Metamask chrome browser extension
+    * Create a local hardhat network: http://127.0.0.1:8545
+    * Import test account
 
-**backend**: backend code
 
-**scripts**: smart contract code deploying scripts
+## Quick start
 
-**hardhat.config.js**: framework for compiling, testing and deploying on a local
+Before start you shoud create localhost network(localhost 8545) in MetaMask. And import some test account, make them active.
 
-**package.json**: package management / project config
+<!-- Install Hardhat local network(only once):
 
-**others**: compiling / running artifacts
+```sh
+npm install --save-dev hardhat
+``` -->
 
+Then following steps below to run this app:
+
+Enter into dapp directory:
+
+Step 1: Start Hardhat local network:
+
+```sh
+npm run hardhat-node
+```
+then run:
+
+```sh
+npm install --save-dev hardhat
+```
+
+Step 2: Run deploy script:
+
+```sh
+npm run deploy-localhost
+```
+
+Step 3: Start node server: 
+
+before start node server, make sure start mysql servive first, if you have not do this, run:
+
+```sh
+brew services start mysql
+```
+then run this below instruction to start node server:
+
+```sh
+npm run start-node
+```
+
+Step 4: open a new terminal to run command for Start frontend code: 
+
+```sh
+npm run start-frontend
+```
 
